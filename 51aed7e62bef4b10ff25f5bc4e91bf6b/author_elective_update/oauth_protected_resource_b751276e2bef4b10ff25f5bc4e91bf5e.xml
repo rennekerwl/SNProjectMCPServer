@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="oauth_protected_resource">
+    <oauth_protected_resource action="DELETE">
+        <active>false</active>
+        <allow_glide_as_authorization_server>true</allow_glide_as_authorization_server>
+        <allowed_glide_apis>/api/sn_mcp_server/mcp_tools_api/generic_tool_executor,/api/sn_mcp_server/mcp_lookup_service/get_records,/api/sn_mcp_server/mcp_lookup_service/preprocess_and_execute_skill,/api/sn_mcp_server/mcp_instance_config,/api/now/v1/oauth/trusted_issuers,/api/sn_mcp_server/mcp_tools_api/tools/server/x_snc_project_mc_0_project_mcp_server,/api/sn_itsm_mcp_server/v1/itsm_mcp_tools/incidents</allowed_glide_apis>
+        <allowed_services>2b4dfc71373003109377c49be2924b5d</allowed_services>
+        <bearer_methods_supported>header</bearer_methods_supported>
+        <resource_identifier>/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</resource_identifier>
+        <resource_name>x_snc_project_mc_0.project_mcp_server</resource_name>
+        <scopes_supported/>
+        <sys_class_name>oauth_protected_resource</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-28 23:41:32</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>b751276e2bef4b10ff25f5bc4e91bf5e</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>oauth_protected_resource_b751276e2bef4b10ff25f5bc4e91bf5e</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 00:07:21</sys_updated_on>
+    </oauth_protected_resource>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</application>
+        <file_path/>
+        <instance_id>bede5a3feb1f2a909698ff72dad0cd5c</instance_id>
+        <instance_name>empwrenneker6</instance_name>
+        <name>oauth_protected_resource_b751276e2bef4b10ff25f5bc4e91bf5e</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="oauth_protected_resource"><oauth_protected_resource action="INSERT_OR_UPDATE"><active>false</active><allow_glide_as_authorization_server>true</allow_glide_as_authorization_server><allowed_glide_apis>/api/sn_mcp_server/mcp_tools_api/generic_tool_executor,/api/sn_mcp_server/mcp_lookup_service/get_records,/api/sn_mcp_server/mcp_lookup_service/preprocess_and_execute_skill,/api/sn_mcp_server/mcp_instance_config,/api/now/v1/oauth/trusted_issuers,/api/sn_mcp_server/mcp_tools_api/tools/server/x_snc_project_mc_0_project_mcp_server,/api/sn_itsm_mcp_server/v1/itsm_mcp_tools/incidents</allowed_glide_apis><allowed_services>2b4dfc71373003109377c49be2924b5d</allowed_services><bearer_methods_supported>header</bearer_methods_supported><resource_identifier>/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</resource_identifier><resource_name>x_snc_project_mc_0.project_mcp_server</resource_name><scopes_supported/><sys_class_name>oauth_protected_resource</sys_class_name><sys_created_by>MCPAdmin</sys_created_by><sys_created_on>2026-09-28 23:41:32</sys_created_on><sys_domain>global</sys_domain><sys_domain_path>/</sys_domain_path><sys_id>b751276e2bef4b10ff25f5bc4e91bf5e</sys_id><sys_mod_count>3</sys_mod_count><sys_name>/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</sys_name><sys_overrides/><sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package><sys_policy/><sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope><sys_update_name>oauth_protected_resource_b751276e2bef4b10ff25f5bc4e91bf5e</sys_update_name><sys_updated_by>MCPAdmin</sys_updated_by><sys_updated_on>2026-09-29 00:07:21</sys_updated_on></oauth_protected_resource></record_update>]]></payload>
+        <payload_hash>66212020</payload_hash>
+        <record_name>/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</record_name>
+        <reverted_from/>
+        <source>0a012baa2bef4b10ff25f5bc4e91bf2e</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 00:07:21</sys_created_on>
+        <sys_id>02472f6a2b238b10ff25f5bc4e91bf27</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a0ea7cc82b0000001</sys_recorded_at>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 00:07:21</sys_updated_on>
+        <type>OAuth Protected Resource</type>
+        <update_guid>8e472f6aac238b10c1e503f7e055a825</update_guid>
+        <update_guid_history>8e472f6aac238b10c1e503f7e055a825:66212020,c061276ea1ef4b101f71c1bb15824b6f:-1287124587,4061276e86ef4b10d1aec65cf6d72d69:408875358,b351276e86ef4b10c112427e40b9a962:-2139530618</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server">c96723aa2b238b10ff25f5bc4e91bf5f</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 00:07:50</sys_created_on>
+        <sys_db_object display_value="" name="oauth_protected_resource">oauth_protected_resource</sys_db_object>
+        <sys_id>29dae1224eca4dc988ed116ea4dca891</sys_id>
+        <sys_metadata>b751276e2bef4b10ff25f5bc4e91bf5e</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_scope_delete display_value="">25bf726cab6444d68d711ad900beb829</sys_scope_delete>
+        <sys_update_name>oauth_protected_resource_b751276e2bef4b10ff25f5bc4e91bf5e</sys_update_name>
+        <sys_update_version display_value="oauth_protected_resource_b751276e2bef4b10ff25f5bc4e91bf5e">02472f6a2b238b10ff25f5bc4e91bf27</sys_update_version>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 00:07:50</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

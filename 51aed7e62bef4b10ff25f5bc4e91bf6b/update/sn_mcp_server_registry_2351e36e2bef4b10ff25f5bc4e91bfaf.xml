@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sn_mcp_server_registry">
+    <sn_mcp_server_registry action="INSERT_OR_UPDATE">
+        <added_tools>1</added_tools>
+        <label>Project MCP Server</label>
+        <name>x_snc_project_mc_0.project_mcp_server</name>
+        <short_description>An MCP Server to allow AI Agents to work with project records in ServiceNow</short_description>
+        <source>custom</source>
+        <status>active</status>
+        <sys_class_name>sn_mcp_server_registry</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-28 23:41:30</sys_created_on>
+        <sys_id>2351e36e2bef4b10ff25f5bc4e91bfaf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Project MCP Server</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_server_registry_2351e36e2bef4b10ff25f5bc4e91bfaf</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-28 23:41:30</sys_updated_on>
+        <url>https://empwrenneker6.service-now.com/sncapps/mcp-server/mcp/x_snc_project_mc_0_project_mcp_server</url>
+    </sn_mcp_server_registry>
+</record_update>
