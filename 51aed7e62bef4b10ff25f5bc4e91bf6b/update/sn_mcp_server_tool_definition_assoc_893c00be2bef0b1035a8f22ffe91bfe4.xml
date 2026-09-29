@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sn_mcp_server_tool_definition_assoc">
+    <sn_mcp_server_tool_definition_assoc action="INSERT_OR_UPDATE">
+        <enabled>true</enabled>
+        <mcp_server display_value="Project MCP Server">2351e36e2bef4b10ff25f5bc4e91bfaf</mcp_server>
+        <sys_class_name>sn_mcp_server_tool_definition_assoc</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 02:48:40</sys_created_on>
+        <sys_id>893c00be2bef0b1035a8f22ffe91bfe4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Project MCP Server.Get Project Details</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_server_tool_definition_assoc_893c00be2bef0b1035a8f22ffe91bfe4</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 02:48:40</sys_updated_on>
+        <tool_definition display_value="Get Project Details">493c847e2bef0b1035a8f22ffe91bf6b</tool_definition>
+        <visibility>model_app</visibility>
+    </sn_mcp_server_tool_definition_assoc>
+</record_update>
