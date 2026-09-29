@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="DELETE">
+        <active>true</active>
+        <consumes/>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>GET</http_method>
+        <name>Get Project Details</name>
+        <operation_script><![CDATA[(function process(request, response) {
+    try {
+        var number = request.pathParams.number;
+
+        if (gs.nil(number)) {
+            response.setStatus(400);
+            response.setBody({ error: 'Missing required parameter: number' });
+            return;
+        }
+
+        var service = new ProjectMCPProjectService();
+        var result = service.getByNumber(number);
+
+        if (!result.success) {
+            response.setStatus(result.status || 404);
+            gs.error('project.get_details service error: ' + result.error);
+            response.setBody({ error: 'Request failed. See server logs for details.' });
+            return;
+        }
+
+        response.setStatus(200);
+        response.setBody(result.data);
+
+    } catch (e) {
+        gs.error('project.get_details error: ' + e.message);
+        response.setStatus(500);
+        response.setBody({ error: 'Internal error processing request' });
+    }
+})(request, response);]]></operation_script>
+        <operation_uri/>
+        <produces/>
+        <produces_customized>false</produces_customized>
+        <relative_path>/project/{number}</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Retrieve project core fields and related table map.</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 02:25:31</sys_created_on>
+        <sys_id>9f868c7e2b6f0b1035a8f22ffe91bf0f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Project Details</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_ws_operation_9f868c7e2b6f0b1035a8f22ffe91bf0f</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 02:25:31</sys_updated_on>
+        <web_service_definition/>
+        <web_service_version/>
+    </sys_ws_operation>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</application>
+        <file_path/>
+        <instance_id>bede5a3feb1f2a909698ff72dad0cd5c</instance_id>
+        <instance_name>empwrenneker6</instance_name>
+        <name>sys_ws_operation_9f868c7e2b6f0b1035a8f22ffe91bf0f</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_ws_operation"&gt;&lt;sys_ws_operation action="INSERT_OR_UPDATE"&gt;&lt;active&gt;true&lt;/active&gt;&lt;consumes/&gt;&lt;consumes_customized&gt;false&lt;/consumes_customized&gt;&lt;default_operation_uri/&gt;&lt;enforce_acl/&gt;&lt;http_method&gt;GET&lt;/http_method&gt;&lt;name&gt;Get Project Details&lt;/name&gt;&lt;operation_script&gt;&lt;![CDATA[(function process(request, response) {
+    try {
+        var number = request.pathParams.number;
+
+        if (gs.nil(number)) {
+            response.setStatus(400);
+            response.setBody({ error: 'Missing required parameter: number' });
+            return;
+        }
+
+        var service = new ProjectMCPProjectService();
+        var result = service.getByNumber(number);
+
+        if (!result.success) {
+            response.setStatus(result.status || 404);
+            gs.error('project.get_details service error: ' + result.error);
+            response.setBody({ error: 'Request failed. See server logs for details.' });
+            return;
+        }
+
+        response.setStatus(200);
+        response.setBody(result.data);
+
+    } catch (e) {
+        gs.error('project.get_details error: ' + e.message);
+        response.setStatus(500);
+        response.setBody({ error: 'Internal error processing request' });
+    }
+})(request, response);]]&gt;&lt;/operation_script&gt;&lt;operation_uri/&gt;&lt;produces/&gt;&lt;produces_customized&gt;false&lt;/produces_customized&gt;&lt;relative_path&gt;/project/{number}&lt;/relative_path&gt;&lt;request_example/&gt;&lt;requires_acl_authorization&gt;true&lt;/requires_acl_authorization&gt;&lt;requires_authentication&gt;true&lt;/requires_authentication&gt;&lt;requires_snc_internal_role&gt;true&lt;/requires_snc_internal_role&gt;&lt;short_description&gt;Retrieve project core fields and related table map.&lt;/short_description&gt;&lt;support_trailing_slash&gt;false&lt;/support_trailing_slash&gt;&lt;sys_class_name&gt;sys_ws_operation&lt;/sys_class_name&gt;&lt;sys_created_by&gt;MCPAdmin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2026-09-29 02:25:31&lt;/sys_created_on&gt;&lt;sys_id&gt;9f868c7e2b6f0b1035a8f22ffe91bf0f&lt;/sys_id&gt;&lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;&lt;sys_name&gt;Get Project Details&lt;/sys_name&gt;&lt;sys_package display_value="Project MCP Server" source="x_snc_project_mc_0"&gt;51aed7e62bef4b10ff25f5bc4e91bf6b&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Project MCP Server"&gt;51aed7e62bef4b10ff25f5bc4e91bf6b&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_ws_operation_9f868c7e2b6f0b1035a8f22ffe91bf0f&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;MCPAdmin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-09-29 02:25:31&lt;/sys_updated_on&gt;&lt;web_service_definition/&gt;&lt;web_service_version/&gt;&lt;/sys_ws_operation&gt;&lt;/record_update&gt;</payload>
+        <payload_hash>1429858015</payload_hash>
+        <record_name>Get Project Details</record_name>
+        <reverted_from/>
+        <source>342580722b6f0b1035a8f22ffe91bf06</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 02:25:31</sys_created_on>
+        <sys_id>c6e684322baf0b1035a8f22ffe91bfcf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a0eafb46c20000001</sys_recorded_at>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 02:25:31</sys_updated_on>
+        <type>Scripted REST Resource</type>
+        <update_guid>b5e68432d2af0b105aea2caaffb6c5ce</update_guid>
+        <update_guid_history>b5e68432d2af0b105aea2caaffb6c5ce:1429858015</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 02:43:54</sys_created_on>
+        <sys_db_object display_value="" name="sys_ws_operation">sys_ws_operation</sys_db_object>
+        <sys_id>312523d086354cb8a35a47a2f83ca610</sys_id>
+        <sys_metadata>9f868c7e2b6f0b1035a8f22ffe91bf0f</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Project Details</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_scope_delete display_value="">25bf726cab6444d68d711ad900beb829</sys_scope_delete>
+        <sys_update_name>sys_ws_operation_9f868c7e2b6f0b1035a8f22ffe91bf0f</sys_update_name>
+        <sys_update_version display_value="sys_ws_operation_9f868c7e2b6f0b1035a8f22ffe91bf0f">c6e684322baf0b1035a8f22ffe91bfcf</sys_update_version>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 02:43:54</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_snc_project_mc_0.ProjectMCPProjectServiceSNC</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>ProjectMCPProjectServiceSNC</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var ProjectMCPProjectServiceSNC = Class.create();
+
+ProjectMCPProjectServiceSNC.prototype = {
+
+    initialize: function() {},
+
+    getByNumber: function(number) {
+        if (gs.nil(number)) {
+            return {
+                success: false,
+                error: 'Missing project number',
+                status: 400
+            };
+        }
+
+        var gr = new GlideRecordSecure('pm_project');
+        gr.addQuery('number', number);
+        gr.setLimit(1);
+        gr.query();
+
+        if (!gr.next()) {
+            return {
+                success: false,
+                error: 'Project not found',
+                status: 404
+            };
+        }
+
+        var project = this._extractCoreFields(gr);
+
+        project.activity = this._getActivity(gr);
+
+        return {
+            success: true,
+            data: project
+        };
+    },
+
+    _extractCoreFields: function(gr) {
+        var result = {};
+
+        var coreFields = [
+            'sys_id',
+            'number',
+            'short_description',
+            'description',
+            'business_case',
+            'active',
+            'state',
+            'status',
+            'phase',
+            'percent_complete',
+            'project_manager',
+            'primary_portfolio',
+            'primary_program',
+            'approved_start_date',
+            'approved_end_date',
+            'start_date',
+            'end_date',
+            'work_start',
+            'work_end'
+        ];
+
+        var displayFields = [
+            'state',
+            'status',
+            'phase',
+            'project_manager',
+            'primary_portfolio',
+            'primary_program'
+        ];
+
+        for (var i = 0; i < coreFields.length; i++) {
+            var field = coreFields[i];
+
+            // Allows this service to tolerate differences in installed
+            // Project/SPM plugins or table configuration.
+            if (!gr.isValidField(field)) {
+                continue;
+            }
+
+            if (displayFields.indexOf(field) !== -1) {
+                result[field] = this._getFieldValue(gr, field);
+            } else {
+                result[field] = gr.getValue(field) || '';
+            }
+        }
+
+        return result;
+    },
+
+    _getActivity: function(gr) {
+        var limit = 5;
+        var activity = [];
+
+        if (gr.isValidField('comments')) {
+            var comments = gr.comments.getJournalEntry(limit);
+
+            if (!gs.nil(comments)) {
+                activity.push(comments);
+            }
+        }
+
+        if (gr.isValidField('work_notes')) {
+            var workNotes = gr.work_notes.getJournalEntry(limit);
+
+            if (!gs.nil(workNotes)) {
+                activity.push(workNotes);
+            }
+        }
+
+        return activity.join('\n\n');
+    },
+
+    _getFieldValue: function(gr, field) {
+        return {
+            value: gr.getValue(field) || '',
+            display_value: gr.getDisplayValue(field) || ''
+        };
+    },
+
+    type: 'ProjectMCPProjectServiceSNC'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-29 02:21:20</sys_created_on>
+        <sys_id>e1c5847a2b6f0b1035a8f22ffe91bf81</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>ProjectMCPProjectServiceSNC</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_script_include_e1c5847a2b6f0b1035a8f22ffe91bf81</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-29 02:21:20</sys_updated_on>
+    </sys_script_include>
+</record_update>
