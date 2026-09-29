@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="oauth_entity_profile">
+    <oauth_entity_profile action="INSERT_OR_UPDATE">
+        <default>true</default>
+        <grant_type>authorization_code</grant_type>
+        <jwt_provider/>
+        <name>AutoGen-x_snc_project_mc_0_project_mcp_server-1790638893478-OAuthProvider-authorization_code</name>
+        <oauth_entity display_value="AutoGen-x_snc_project_mc_0_project_mcp_server-1790638893478-OAuthProvider">c46127262b270b1035a8f22ffe91bf78</oauth_entity>
+        <oauth_resources>886127262b270b1035a8f22ffe91bf79</oauth_resources>
+        <saml2_assertion_producer/>
+        <sys_class_name>oauth_entity_profile</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-09-28 23:41:33</sys_created_on>
+        <sys_id>446127262b270b1035a8f22ffe91bf7f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AutoGen-x_snc_project_mc_0_project_mcp_server-1790638893478-OAuthProvider-authorization_code</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>oauth_entity_profile_446127262b270b1035a8f22ffe91bf7f</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-09-28 23:41:33</sys_updated_on>
+    </oauth_entity_profile>
+</record_update>
