@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>GET</http_method>
+        <name>Get Story Details</name>
+        <operation_script><![CDATA[(function process(request, response) {
+    try {
+        var number = request.pathParams.number;
+
+        if (gs.nil(number)) {
+            response.setStatus(400);
+            response.setBody({
+                error: 'Missing required parameter: number'
+            });
+            return;
+        }
+
+        var service = new ProjectMCPStoryService();
+        var result = service.getByNumber(number);
+
+        if (!result.success) {
+            response.setStatus(result.status || 404);
+
+            gs.error(
+                'project.story.get_details service error: ' +
+                result.error
+            );
+
+            response.setBody({
+                error: 'Request failed. See server logs for details.'
+            });
+
+            return;
+        }
+
+        response.setStatus(200);
+        response.setBody(result.data);
+
+    } catch (e) {
+        gs.error(
+            'project.story.get_details error: ' +
+            e.message
+        );
+
+        response.setStatus(500);
+        response.setBody({
+            error: 'Internal error processing request'
+        });
+    }
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_snc_project_mc_0/project_mcp_tool_api/story/{number}</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/story/{number}</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 17:26:18</sys_created_on>
+        <sys_id>a11b37402bf7471035a8f22ffe91bf3a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Story Details</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_ws_operation_a11b37402bf7471035a8f22ffe91bf3a</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 17:26:18</sys_updated_on>
+        <web_service_definition display_value="Project MCP Tool API">653884fa2baf0b1035a8f22ffe91bfdd</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

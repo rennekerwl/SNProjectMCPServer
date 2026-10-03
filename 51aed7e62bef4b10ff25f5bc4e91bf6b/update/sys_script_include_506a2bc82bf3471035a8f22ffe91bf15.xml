@@ -10,14 +10,17 @@
         <name>ProjectMCPStoryServiceSNC</name>
         <sandbox_callable>false</sandbox_callable>
         <script><![CDATA[var ProjectMCPStoryServiceSNC = Class.create();
+
 ProjectMCPStoryServiceSNC.prototype = {
-    initialize: function() {},
+
+    initialize: function() {
+    },
 
     /**
      * Returns stories associated with a project.
      *
-     * @param {String} projectNumber Project number, e.g. PRJ0010001
-     * @param {Object} options Optional pagination settings
+     * @param {String} projectNumber - Project number, e.g. PRJ0010001
+     * @param {Object} options - Optional paging settings
      * @returns {Object}
      */
     listForProject: function(projectNumber, options) {
@@ -25,7 +28,7 @@ ProjectMCPStoryServiceSNC.prototype = {
             return {
                 success: false,
                 status: 400,
-                error: 'Missing required project number'
+                error: 'Missing required parameter: project number'
             };
         }
 
@@ -34,7 +37,9 @@ ProjectMCPStoryServiceSNC.prototype = {
         var limit = this._parseInteger(options.limit, 50, 1, 100);
         var offset = this._parseInteger(options.offset, 0, 0, 100000);
 
-        // Resolve the project number to a project sys_id.
+        /*
+         * Resolve the project number to its sys_id first.
+         */
         var project = new GlideRecordSecure('pm_project');
         project.addQuery('number', projectNumber);
         project.setLimit(1);
@@ -44,34 +49,33 @@ ProjectMCPStoryServiceSNC.prototype = {
             return {
                 success: false,
                 status: 404,
-                error: 'Project not found'
+                error: 'Project not found: ' + projectNumber
             };
         }
 
-        var stories = [];
-        var hasMore = false;
+        var projectSysId = project.getUniqueValue();
 
+        /*
+         * Request one additional record so we can determine whether
+         * another page exists without running a separate count query.
+         */
         var story = new GlideRecordSecure('rm_story');
-        story.addQuery('project', project.getUniqueValue());
-
-        // Give agents a stable, predictable ordering.
-        if (story.isValidField('priority')) {
-            story.orderBy('priority');
-        }
+        story.addQuery('project', projectSysId);
+        story.orderBy('priority');
         story.orderBy('number');
-
-        // Retrieve one extra record so we can determine whether another
-        // page exists without running a separate count query.
         story.chooseWindow(offset, offset + limit + 1);
         story.query();
 
-        while (story.next()) {
-            if (stories.length >= limit) {
-                hasMore = true;
-                break;
-            }
+        var stories = [];
 
+        while (story.next()) {
             stories.push(this._serializeStory(story));
+        }
+
+        var hasMore = stories.length > limit;
+
+        if (hasMore) {
+            stories.pop();
         }
 
         return {
@@ -79,11 +83,13 @@ ProjectMCPStoryServiceSNC.prototype = {
             status: 200,
             data: {
                 project: {
-                    sys_id: project.getUniqueValue(),
-                    number: project.getValue('number'),
-                    short_description: project.getValue('short_description')
+                    sys_id: projectSysId,
+                    number: this._value(project, 'number'),
+                    short_description: this._value(project, 'short_description')
                 },
+
                 stories: stories,
+
                 pagination: {
                     limit: limit,
                     offset: offset,
@@ -96,26 +102,112 @@ ProjectMCPStoryServiceSNC.prototype = {
     },
 
     /**
-     * Returns the summary representation of an rm_story record.
+     * Returns detailed information for a single story.
      *
-     * Keep this intentionally smaller than a future Get Story Details tool.
+     * @param {String} number - Story number, e.g. STRY0010001
+     * @returns {Object}
+     */
+    getByNumber: function(number) {
+        if (gs.nil(number)) {
+            return {
+                success: false,
+                status: 400,
+                error: 'Missing required parameter: number'
+            };
+        }
+
+        var story = new GlideRecordSecure('rm_story');
+        story.addQuery('number', number);
+        story.setLimit(1);
+        story.query();
+
+        if (!story.next()) {
+            return {
+                success: false,
+                status: 404,
+                error: 'Story not found: ' + number
+            };
+        }
+
+        var data = {
+            sys_id: story.getUniqueValue(),
+            number: this._value(story, 'number'),
+            short_description: this._value(story, 'short_description'),
+            description: this._value(story, 'description'),
+            acceptance_criteria: this._value(story, 'acceptance_criteria'),
+
+            state: this._valueAndDisplay(story, 'state'),
+            priority: this._valueAndDisplay(story, 'priority'),
+            type: this._valueAndDisplay(story, 'type'),
+            classification: this._valueAndDisplay(story, 'classification'),
+
+            points: this._number(story, 'story_points'),
+            blocked: this._boolean(story, 'blocked'),
+            active: this._boolean(story, 'active'),
+
+            project: this._reference(story, 'project'),
+            project_phase: this._reference(story, 'project_phase'),
+
+            assignment_group: this._reference(story, 'assignment_group'),
+            assigned_to: this._reference(story, 'assigned_to'),
+            sprint: this._reference(story, 'sprint'),
+
+            epic: this._reference(story, 'epic'),
+            product: this._reference(story, 'product'),
+            release: this._reference(story, 'release'),
+
+            sys_created_on: this._value(story, 'sys_created_on'),
+            sys_updated_on: this._value(story, 'sys_updated_on')
+        };
+
+        /*
+         * Some Story fields vary depending on installed plugins/version.
+         * These helpers safely return null when a field does not exist.
+         */
+        data.theme = this._reference(story, 'theme');
+        data.demand = this._reference(story, 'demand');
+
+        /*
+         * Journal fields cannot be read meaningfully with getValue().
+         * Return the most recent entry for useful MCP context without
+         * sending the story's entire activity history.
+         */
+        data.activity = {
+            comments: this._latestJournalEntry(story, 'comments'),
+            work_notes: this._latestJournalEntry(story, 'work_notes')
+        };
+
+        return {
+            success: true,
+            status: 200,
+            data: data
+        };
+    },
+
+    /**
+     * Serialize a Story for list responses.
+     *
+     * Keep this intentionally smaller than getByNumber() so a project
+     * containing many stories does not produce an unnecessarily large
+     * MCP response.
      */
     _serializeStory: function(story) {
         return {
             sys_id: story.getUniqueValue(),
-            number: story.getValue('number'),
-            short_description: story.getValue('short_description'),
+            number: this._value(story, 'number'),
+            short_description: this._value(story, 'short_description'),
 
             state: this._valueAndDisplay(story, 'state'),
             priority: this._valueAndDisplay(story, 'priority'),
 
-            points: this._number(story, 'points'),
+            points: this._number(story, 'story_points'),
             blocked: this._boolean(story, 'blocked'),
             active: this._boolean(story, 'active'),
 
             assignment_group: this._reference(story, 'assignment_group'),
             assigned_to: this._reference(story, 'assigned_to'),
             sprint: this._reference(story, 'sprint'),
+
             epic: this._reference(story, 'epic'),
             product: this._reference(story, 'product'),
             release: this._reference(story, 'release'),
@@ -125,17 +217,24 @@ ProjectMCPStoryServiceSNC.prototype = {
         };
     },
 
+    /**
+     * Return a raw field value or null.
+     */
     _value: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName)) {
+        if (!gr || !gr.isValidField(fieldName)) {
             return null;
         }
 
         var value = gr.getValue(fieldName);
+
         return gs.nil(value) ? null : value;
     },
 
+    /**
+     * Return both the raw and display values for a field.
+     */
     _valueAndDisplay: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName)) {
+        if (!gr || !gr.isValidField(fieldName)) {
             return null;
         }
 
@@ -151,8 +250,11 @@ ProjectMCPStoryServiceSNC.prototype = {
         };
     },
 
+    /**
+     * Return a reference field as its sys_id and display value.
+     */
     _reference: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName)) {
+        if (!gr || !gr.isValidField(fieldName)) {
             return null;
         }
 
@@ -168,8 +270,11 @@ ProjectMCPStoryServiceSNC.prototype = {
         };
     },
 
+    /**
+     * Return a numeric field as a JavaScript number.
+     */
     _number: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName)) {
+        if (!gr || !gr.isValidField(fieldName)) {
             return null;
         }
 
@@ -179,12 +284,16 @@ ProjectMCPStoryServiceSNC.prototype = {
             return null;
         }
 
-        var parsed = parseFloat(value);
-        return isNaN(parsed) ? null : parsed;
+        var number = parseFloat(value);
+
+        return isNaN(number) ? null : number;
     },
 
+    /**
+     * Return a Glide boolean field as a JavaScript boolean.
+     */
     _boolean: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName)) {
+        if (!gr || !gr.isValidField(fieldName)) {
             return null;
         }
 
@@ -197,23 +306,39 @@ ProjectMCPStoryServiceSNC.prototype = {
         return value == 'true' || value == '1';
     },
 
-    _parseInteger: function(value, defaultValue, min, max) {
-        if (gs.nil(value)) {
-            return defaultValue;
+    /**
+     * Return the most recent entry from a journal field.
+     */
+    _latestJournalEntry: function(gr, fieldName) {
+        if (!gr || !gr.isValidField(fieldName)) {
+            return null;
         }
 
+        try {
+            var value = gr.getElement(fieldName).getJournalEntry(-1);
+
+            return gs.nil(value) ? null : value;
+        } catch (e) {
+            return null;
+        }
+    },
+
+    /**
+     * Parse, default, and clamp an integer option.
+     */
+    _parseInteger: function(value, defaultValue, min, max) {
         var parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-            return defaultValue;
+            parsed = defaultValue;
         }
 
         if (parsed < min) {
-            return min;
+            parsed = min;
         }
 
         if (parsed > max) {
-            return max;
+            parsed = max;
         }
 
         return parsed;
@@ -225,13 +350,13 @@ ProjectMCPStoryServiceSNC.prototype = {
         <sys_created_by>MCPAdmin</sys_created_by>
         <sys_created_on>2026-10-03 16:14:02</sys_created_on>
         <sys_id>506a2bc82bf3471035a8f22ffe91bf15</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_name>ProjectMCPStoryServiceSNC</sys_name>
         <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
         <sys_policy/>
         <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
         <sys_update_name>sys_script_include_506a2bc82bf3471035a8f22ffe91bf15</sys_update_name>
         <sys_updated_by>MCPAdmin</sys_updated_by>
-        <sys_updated_on>2026-10-03 16:14:02</sys_updated_on>
+        <sys_updated_on>2026-10-03 17:53:08</sys_updated_on>
     </sys_script_include>
 </record_update>
