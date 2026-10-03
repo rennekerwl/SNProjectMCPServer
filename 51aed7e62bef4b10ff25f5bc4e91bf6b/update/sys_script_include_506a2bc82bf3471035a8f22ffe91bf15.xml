@@ -17,6 +17,226 @@ ProjectMCPStoryServiceSNC.prototype = {
     },
 
     /**
+     * Create a new Story.
+     *
+     * Supported input:
+     *   short_description   required
+     *   description
+     *   acceptance_criteria
+     *   project             project sys_id or project number
+     *   sprint              sprint sys_id, number, or name
+     *   story_points
+     *   assigned_to         user sys_id, user_name, or email
+     *   assignment_group    group sys_id or name
+     *   priority
+     *
+     * @param {Object} input - Story fields
+     * @returns {Object}
+     */
+    createStory: function(input) {
+        if (!input || typeof input !== 'object') {
+            return {
+                success: false,
+                status: 400,
+                error: 'Missing request body'
+            };
+        }
+
+        if (gs.nil(input.short_description) ||
+            String(input.short_description).trim() === '') {
+
+            return {
+                success: false,
+                status: 400,
+                error: 'Missing required field: short_description'
+            };
+        }
+
+        var story = new GlideRecordSecure('rm_story');
+
+        if (!story.canCreate()) {
+            return {
+                success: false,
+                status: 403,
+                error: 'Not authorized to create stories'
+            };
+        }
+
+        story.initialize();
+
+        story.setValue(
+            'short_description',
+            String(input.short_description).trim()
+        );
+
+        if (this._isProvided(input.description)) {
+            story.setValue('description', input.description);
+        }
+
+        if (this._isProvided(input.acceptance_criteria)) {
+            story.setValue(
+                'acceptance_criteria',
+                input.acceptance_criteria
+            );
+        }
+
+        /*
+         * Resolve reference fields. These accept either a sys_id or
+         * a useful human-readable identifier.
+         */
+        var result;
+
+        result = this._setReferenceField(
+            story,
+            'project',
+            input.project,
+            ['number']
+        );
+
+        if (!result.success) {
+            return result;
+        }
+
+        result = this._setReferenceField(
+            story,
+            'sprint',
+            input.sprint,
+            ['number', 'name']
+        );
+
+        if (!result.success) {
+            return result;
+        }
+
+        result = this._setReferenceField(
+            story,
+            'assigned_to',
+            input.assigned_to,
+            ['user_name', 'email']
+        );
+
+        if (!result.success) {
+            return result;
+        }
+
+        result = this._setReferenceField(
+            story,
+            'assignment_group',
+            input.assignment_group,
+            ['name']
+        );
+
+        if (!result.success) {
+            return result;
+        }
+
+        /*
+         * Story points must be numeric and non-negative.
+         */
+        if (this._isProvided(input.story_points)) {
+            var points = parseFloat(input.story_points);
+
+            if (isNaN(points) || points < 0) {
+                return {
+                    success: false,
+                    status: 400,
+                    error: 'story_points must be a non-negative number'
+                };
+            }
+
+            story.setValue('story_points', points);
+        }
+
+        if (this._isProvided(input.priority)) {
+            story.setValue('priority', input.priority);
+        }
+
+        var sysId = story.insert();
+
+        if (gs.nil(sysId)) {
+            return {
+                success: false,
+                status: 400,
+                error: story.getLastErrorMessage() ||
+                    'Story could not be created'
+            };
+        }
+
+        /*
+         * Re-query so generated values and Business Rule changes
+         * are reflected in the response.
+         */
+        var createdStory = new GlideRecordSecure('rm_story');
+
+        if (!createdStory.get(sysId)) {
+            return {
+                success: true,
+                status: 201,
+                data: {
+                    sys_id: sysId
+                }
+            };
+        }
+
+        return {
+            success: true,
+            status: 201,
+            data: {
+                sys_id: createdStory.getUniqueValue(),
+                number: this._value(createdStory, 'number'),
+                short_description: this._value(
+                    createdStory,
+                    'short_description'
+                ),
+                description: this._value(
+                    createdStory,
+                    'description'
+                ),
+                acceptance_criteria: this._value(
+                    createdStory,
+                    'acceptance_criteria'
+                ),
+
+                state: this._valueAndDisplay(
+                    createdStory,
+                    'state'
+                ),
+                priority: this._valueAndDisplay(
+                    createdStory,
+                    'priority'
+                ),
+
+                points: this._number(
+                    createdStory,
+                    'story_points'
+                ),
+
+                project: this._reference(
+                    createdStory,
+                    'project'
+                ),
+                assignment_group: this._reference(
+                    createdStory,
+                    'assignment_group'
+                ),
+                assigned_to: this._reference(
+                    createdStory,
+                    'assigned_to'
+                ),
+                sprint: this._reference(
+                    createdStory,
+                    'sprint'
+                ),
+
+                sys_created_on: this._value(
+                    createdStory,
+                    'sys_created_on'
+                )
+            }
+        };
+    },
+
+    /**
      * Returns stories associated with a project.
      *
      * @param {String} projectNumber - Project number, e.g. PRJ0010001
@@ -85,7 +305,10 @@ ProjectMCPStoryServiceSNC.prototype = {
                 project: {
                     sys_id: projectSysId,
                     number: this._value(project, 'number'),
-                    short_description: this._value(project, 'short_description')
+                    short_description: this._value(
+                        project,
+                        'short_description'
+                    )
                 },
 
                 stories: stories,
@@ -132,23 +355,38 @@ ProjectMCPStoryServiceSNC.prototype = {
         var data = {
             sys_id: story.getUniqueValue(),
             number: this._value(story, 'number'),
-            short_description: this._value(story, 'short_description'),
+            short_description: this._value(
+                story,
+                'short_description'
+            ),
             description: this._value(story, 'description'),
-            acceptance_criteria: this._value(story, 'acceptance_criteria'),
+            acceptance_criteria: this._value(
+                story,
+                'acceptance_criteria'
+            ),
 
             state: this._valueAndDisplay(story, 'state'),
             priority: this._valueAndDisplay(story, 'priority'),
             type: this._valueAndDisplay(story, 'type'),
-            classification: this._valueAndDisplay(story, 'classification'),
+            classification: this._valueAndDisplay(
+                story,
+                'classification'
+            ),
 
             points: this._number(story, 'story_points'),
             blocked: this._boolean(story, 'blocked'),
             active: this._boolean(story, 'active'),
 
             project: this._reference(story, 'project'),
-            project_phase: this._reference(story, 'project_phase'),
+            project_phase: this._reference(
+                story,
+                'project_phase'
+            ),
 
-            assignment_group: this._reference(story, 'assignment_group'),
+            assignment_group: this._reference(
+                story,
+                'assignment_group'
+            ),
             assigned_to: this._reference(story, 'assigned_to'),
             sprint: this._reference(story, 'sprint'),
 
@@ -156,25 +394,31 @@ ProjectMCPStoryServiceSNC.prototype = {
             product: this._reference(story, 'product'),
             release: this._reference(story, 'release'),
 
-            sys_created_on: this._value(story, 'sys_created_on'),
-            sys_updated_on: this._value(story, 'sys_updated_on')
+            sys_created_on: this._value(
+                story,
+                'sys_created_on'
+            ),
+            sys_updated_on: this._value(
+                story,
+                'sys_updated_on'
+            )
         };
 
         /*
          * Some Story fields vary depending on installed plugins/version.
-         * These helpers safely return null when a field does not exist.
          */
         data.theme = this._reference(story, 'theme');
         data.demand = this._reference(story, 'demand');
 
-        /*
-         * Journal fields cannot be read meaningfully with getValue().
-         * Return the most recent entry for useful MCP context without
-         * sending the story's entire activity history.
-         */
         data.activity = {
-            comments: this._latestJournalEntry(story, 'comments'),
-            work_notes: this._latestJournalEntry(story, 'work_notes')
+            comments: this._latestJournalEntry(
+                story,
+                'comments'
+            ),
+            work_notes: this._latestJournalEntry(
+                story,
+                'work_notes'
+            )
         };
 
         return {
@@ -186,16 +430,15 @@ ProjectMCPStoryServiceSNC.prototype = {
 
     /**
      * Serialize a Story for list responses.
-     *
-     * Keep this intentionally smaller than getByNumber() so a project
-     * containing many stories does not produce an unnecessarily large
-     * MCP response.
      */
     _serializeStory: function(story) {
         return {
             sys_id: story.getUniqueValue(),
             number: this._value(story, 'number'),
-            short_description: this._value(story, 'short_description'),
+            short_description: this._value(
+                story,
+                'short_description'
+            ),
 
             state: this._valueAndDisplay(story, 'state'),
             priority: this._valueAndDisplay(story, 'priority'),
@@ -204,17 +447,153 @@ ProjectMCPStoryServiceSNC.prototype = {
             blocked: this._boolean(story, 'blocked'),
             active: this._boolean(story, 'active'),
 
-            assignment_group: this._reference(story, 'assignment_group'),
+            assignment_group: this._reference(
+                story,
+                'assignment_group'
+            ),
             assigned_to: this._reference(story, 'assigned_to'),
             sprint: this._reference(story, 'sprint'),
 
             epic: this._reference(story, 'epic'),
             product: this._reference(story, 'product'),
             release: this._reference(story, 'release'),
-            project_phase: this._reference(story, 'project_phase'),
+            project_phase: this._reference(
+                story,
+                'project_phase'
+            ),
 
-            sys_updated_on: this._value(story, 'sys_updated_on')
+            sys_updated_on: this._value(
+                story,
+                'sys_updated_on'
+            )
         };
+    },
+
+    /**
+     * Set a reference field from either a sys_id or one of the
+     * supplied lookup fields.
+     */
+    _setReferenceField: function(
+        record,
+        fieldName,
+        inputValue,
+        lookupFields
+    ) {
+        if (!this._isProvided(inputValue)) {
+            return {
+                success: true
+            };
+        }
+
+        if (!record.isValidField(fieldName)) {
+            return {
+                success: false,
+                status: 400,
+                error: 'Field is not available: ' + fieldName
+            };
+        }
+
+        var element = record.getElement(fieldName);
+        var referenceTable = element.getReferenceTable();
+
+        if (gs.nil(referenceTable)) {
+            return {
+                success: false,
+                status: 400,
+                error: fieldName + ' is not a reference field'
+            };
+        }
+
+        var value = String(inputValue).trim();
+        var reference = new GlideRecordSecure(referenceTable);
+
+        /*
+         * Check sys_id first.
+         */
+        if (reference.get(value)) {
+            record.setValue(fieldName, reference.getUniqueValue());
+
+            return {
+                success: true
+            };
+        }
+
+        /*
+         * Otherwise search human-readable identifiers.
+         */
+        reference = new GlideRecordSecure(referenceTable);
+
+        var query = null;
+
+        for (var i = 0; i < lookupFields.length; i++) {
+            var lookupField = lookupFields[i];
+
+            if (!reference.isValidField(lookupField)) {
+                continue;
+            }
+
+            if (query === null) {
+                query = reference.addQuery(
+                    lookupField,
+                    value
+                );
+            } else {
+                query.addOrCondition(
+                    lookupField,
+                    value
+                );
+            }
+        }
+
+        if (query === null) {
+            return {
+                success: false,
+                status: 400,
+                error: 'Unable to resolve reference field: ' +
+                    fieldName
+            };
+        }
+
+        /*
+         * Retrieve at most two so ambiguous matches can be rejected.
+         */
+        reference.setLimit(2);
+        reference.query();
+
+        if (!reference.next()) {
+            return {
+                success: false,
+                status: 404,
+                error: 'No matching record found for ' +
+                    fieldName + ': ' + value
+            };
+        }
+
+        var sysId = reference.getUniqueValue();
+
+        if (reference.next()) {
+            return {
+                success: false,
+                status: 409,
+                error: 'Multiple records matched ' +
+                    fieldName + ': ' + value
+            };
+        }
+
+        record.setValue(fieldName, sysId);
+
+        return {
+            success: true
+        };
+    },
+
+    /**
+     * Determine whether an optional input was actually supplied.
+     */
+    _isProvided: function(value) {
+        return value !== undefined &&
+            value !== null &&
+            String(value).trim() !== '';
     },
 
     /**
@@ -315,7 +694,9 @@ ProjectMCPStoryServiceSNC.prototype = {
         }
 
         try {
-            var value = gr.getElement(fieldName).getJournalEntry(-1);
+            var value = gr.getElement(
+                fieldName
+            ).getJournalEntry(-1);
 
             return gs.nil(value) ? null : value;
         } catch (e) {
@@ -350,13 +731,13 @@ ProjectMCPStoryServiceSNC.prototype = {
         <sys_created_by>MCPAdmin</sys_created_by>
         <sys_created_on>2026-10-03 16:14:02</sys_created_on>
         <sys_id>506a2bc82bf3471035a8f22ffe91bf15</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>ProjectMCPStoryServiceSNC</sys_name>
         <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
         <sys_policy/>
         <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
         <sys_update_name>sys_script_include_506a2bc82bf3471035a8f22ffe91bf15</sys_update_name>
         <sys_updated_by>MCPAdmin</sys_updated_by>
-        <sys_updated_on>2026-10-03 17:53:08</sys_updated_on>
+        <sys_updated_on>2026-10-03 19:09:31</sys_updated_on>
     </sys_script_include>
 </record_update>
