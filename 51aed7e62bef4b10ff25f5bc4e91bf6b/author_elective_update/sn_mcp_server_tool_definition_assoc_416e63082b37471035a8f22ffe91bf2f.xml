@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sn_mcp_server_tool_definition_assoc">
+    <sn_mcp_server_tool_definition_assoc action="DELETE">
+        <enabled>true</enabled>
+        <mcp_server display_value="TEST SERVER">9a1527882bb3471035a8f22ffe91bf8a</mcp_server>
+        <sys_class_name>sn_mcp_server_tool_definition_assoc</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 16:29:18</sys_created_on>
+        <sys_id>416e63082b37471035a8f22ffe91bf2f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>TEST SERVER.List Stories For Project</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_server_tool_definition_assoc_416e63082b37471035a8f22ffe91bf2f</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 16:29:18</sys_updated_on>
+        <tool_definition display_value="List Stories For Project">f46ea7c42b37471035a8f22ffe91bf31</tool_definition>
+        <visibility>model_app</visibility>
+    </sn_mcp_server_tool_definition_assoc>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</application>
+        <file_path/>
+        <instance_id>bede5a3feb1f2a909698ff72dad0cd5c</instance_id>
+        <instance_name>empwrenneker6</instance_name>
+        <name>sn_mcp_server_tool_definition_assoc_416e63082b37471035a8f22ffe91bf2f</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sn_mcp_server_tool_definition_assoc"><sn_mcp_server_tool_definition_assoc action="INSERT_OR_UPDATE"><enabled>true</enabled><mcp_server display_value="TEST SERVER">9a1527882bb3471035a8f22ffe91bf8a</mcp_server><sys_class_name>sn_mcp_server_tool_definition_assoc</sys_class_name><sys_created_by>MCPAdmin</sys_created_by><sys_created_on>2026-10-03 16:29:18</sys_created_on><sys_id>416e63082b37471035a8f22ffe91bf2f</sys_id><sys_mod_count>0</sys_mod_count><sys_name>TEST SERVER.List Stories For Project</sys_name><sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package><sys_policy/><sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope><sys_update_name>sn_mcp_server_tool_definition_assoc_416e63082b37471035a8f22ffe91bf2f</sys_update_name><sys_updated_by>MCPAdmin</sys_updated_by><sys_updated_on>2026-10-03 16:29:18</sys_updated_on><tool_definition display_value="List Stories For Project">f46ea7c42b37471035a8f22ffe91bf31</tool_definition><visibility>model_app</visibility></sn_mcp_server_tool_definition_assoc></record_update>]]></payload>
+        <payload_hash>1598386903</payload_hash>
+        <record_name>TEST SERVER.List Stories For Project</record_name>
+        <reverted_from/>
+        <source>342580722b6f0b1035a8f22ffe91bf06</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 16:29:19</sys_created_on>
+        <sys_id>516e63082b37471035a8f22ffe91bf35</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a102993c450000001</sys_recorded_at>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 16:29:19</sys_updated_on>
+        <type>MCP Server Tool Definition Association</type>
+        <update_guid>116e6308563747102d9699242e32c134</update_guid>
+        <update_guid_history>116e6308563747102d9699242e32c134:1598386903</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="TEST SERVER.List Stories For Project">6e76b3c02bb7471035a8f22ffe91bf3d</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 17:04:37</sys_created_on>
+        <sys_db_object display_value="" name="sn_mcp_server_tool_definition_assoc">sn_mcp_server_tool_definition_assoc</sys_db_object>
+        <sys_id>6a0bbe02230e4df795fbf630adb72db9</sys_id>
+        <sys_metadata>416e63082b37471035a8f22ffe91bf2f</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>TEST SERVER.List Stories For Project</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_scope_delete display_value="">25bf726cab6444d68d711ad900beb829</sys_scope_delete>
+        <sys_update_name>sn_mcp_server_tool_definition_assoc_416e63082b37471035a8f22ffe91bf2f</sys_update_name>
+        <sys_update_version display_value="sn_mcp_server_tool_definition_assoc_416e63082b37471035a8f22ffe91bf2f">516e63082b37471035a8f22ffe91bf35</sys_update_version>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 17:04:37</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
