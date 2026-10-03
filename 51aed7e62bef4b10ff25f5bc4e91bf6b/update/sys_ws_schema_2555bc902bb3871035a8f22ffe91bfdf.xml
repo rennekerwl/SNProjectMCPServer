@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_schema">
+    <sys_ws_schema action="INSERT_OR_UPDATE">
+        <api>Project MCP Tool API</api>
+        <api_path>x_snc_project_mc_0/project_mcp_tool_api</api_path>
+        <description/>
+        <name>ProjectMCPModifyStorySchema</name>
+        <openapi_version>3.0.1</openapi_version>
+        <schema>{&#13;
+  "type": "object",&#13;
+  "description": "Fields to modify on an existing story. Include only fields that should be changed.",&#13;
+  "properties": {&#13;
+    "short_description": {&#13;
+      "type": "string",&#13;
+      "description": "New short description for the story"&#13;
+    },&#13;
+    "description": {&#13;
+      "type": "string",&#13;
+      "description": "New detailed description."&#13;
+    },&#13;
+    "acceptance_criteria": {&#13;
+      "type": "string",&#13;
+      "description": "New acceptance criteria."&#13;
+    },&#13;
+    "state": {&#13;
+      "type": "string",&#13;
+      "description": "Target story state. Supply the internal state value, such as the value returned by Get Story Details."&#13;
+    },&#13;
+    "priority": {&#13;
+      "type": "string",&#13;
+      "description": "Target priority. Supply the internal priority value."&#13;
+    },&#13;
+    "story_points": {&#13;
+      "type": "number",&#13;
+      "minimum": 0,&#13;
+      "description": "Story point estimate"&#13;
+    },&#13;
+    "blocked": {&#13;
+      "type": "boolean",&#13;
+      "description": "Whether the story is blocked"&#13;
+    },&#13;
+    "project": {&#13;
+      "type": "string",&#13;
+      "description": "Project number, project name, or project sys_id."&#13;
+    },&#13;
+    "sprint": {&#13;
+      "type": "string",&#13;
+      "description": "Sprint number, sprint name, or sprint sys_id."&#13;
+    },&#13;
+    "assigned_to": {&#13;
+      "type": "string",&#13;
+      "description": "User name, user display name, or user sys_id.  Send an empty string to clear this field's existing value."&#13;
+    },&#13;
+    "assignment_group": {&#13;
+      "type": "string",&#13;
+      "description": "Assignment group name or sys_id.  Send an empty string to clear this field's existing value."&#13;
+    },&#13;
+    "work_notes": {&#13;
+      "type": "string",&#13;
+      "description": "Internal work note to append to the story. Adds a new journal entry."&#13;
+    },&#13;
+    "comments": {&#13;
+      "type": "string",&#13;
+      "description": "Comment to append to the story. Adds a new journal entry."&#13;
+    }&#13;
+  },&#13;
+  "additionalProperties": false&#13;
+}</schema>
+        <sys_class_name>sys_ws_schema</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 21:40:05</sys_created_on>
+        <sys_id>2555bc902bb3871035a8f22ffe91bfdf</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>ProjectMCPModifyStorySchema</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_ws_schema_2555bc902bb3871035a8f22ffe91bfdf</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 22:48:23</sys_updated_on>
+    </sys_ws_schema>
+</record_update>
