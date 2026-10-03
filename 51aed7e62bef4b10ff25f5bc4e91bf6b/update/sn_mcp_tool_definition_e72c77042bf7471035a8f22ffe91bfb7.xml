@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_mcp_tool_definition">
+    <sn_mcp_tool_definition action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <annotations/>
+        <description>Get Story Details</description>
+        <duplicated_from/>
+        <label>Get Story Details</label>
+        <mcp_app/>
+        <name>x_snc_project_mc_0.get_story_details</name>
+        <servers_associated>TestServer1,Project MCP Server</servers_associated>
+        <source>custom</source>
+        <sys_class_name>sn_mcp_tool_definition</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 17:29:32</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>e72c77042bf7471035a8f22ffe91bfb7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Story Details</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_tool_definition_e72c77042bf7471035a8f22ffe91bfb7</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 17:29:32</sys_updated_on>
+        <tool_artifact_id>{"httpMethod":"GET","route":"/x_snc_project_mc_0/project_mcp_tool_api/story/{number}"}</tool_artifact_id>
+        <tool_category display_value="REST API">4a95b371ff363210e9f3ffffffffffbb</tool_category>
+    </sn_mcp_tool_definition>
+</record_update>
