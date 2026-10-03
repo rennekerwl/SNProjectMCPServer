@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_snc_project_mc_0.ProjectMCPStoryServiceSNC</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>ProjectMCPStoryServiceSNC</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var ProjectMCPStoryServiceSNC = Class.create();
+ProjectMCPStoryServiceSNC.prototype = {
+    initialize: function() {},
+
+    /**
+     * Returns stories associated with a project.
+     *
+     * @param {String} projectNumber Project number, e.g. PRJ0010001
+     * @param {Object} options Optional pagination settings
+     * @returns {Object}
+     */
+    listForProject: function(projectNumber, options) {
+        if (gs.nil(projectNumber)) {
+            return {
+                success: false,
+                status: 400,
+                error: 'Missing required project number'
+            };
+        }
+
+        options = options || {};
+
+        var limit = this._parseInteger(options.limit, 50, 1, 100);
+        var offset = this._parseInteger(options.offset, 0, 0, 100000);
+
+        // Resolve the project number to a project sys_id.
+        var project = new GlideRecordSecure('pm_project');
+        project.addQuery('number', projectNumber);
+        project.setLimit(1);
+        project.query();
+
+        if (!project.next()) {
+            return {
+                success: false,
+                status: 404,
+                error: 'Project not found'
+            };
+        }
+
+        var stories = [];
+        var hasMore = false;
+
+        var story = new GlideRecordSecure('rm_story');
+        story.addQuery('project', project.getUniqueValue());
+
+        // Give agents a stable, predictable ordering.
+        if (story.isValidField('priority')) {
+            story.orderBy('priority');
+        }
+        story.orderBy('number');
+
+        // Retrieve one extra record so we can determine whether another
+        // page exists without running a separate count query.
+        story.chooseWindow(offset, offset + limit + 1);
+        story.query();
+
+        while (story.next()) {
+            if (stories.length >= limit) {
+                hasMore = true;
+                break;
+            }
+
+            stories.push(this._serializeStory(story));
+        }
+
+        return {
+            success: true,
+            status: 200,
+            data: {
+                project: {
+                    sys_id: project.getUniqueValue(),
+                    number: project.getValue('number'),
+                    short_description: project.getValue('short_description')
+                },
+                stories: stories,
+                pagination: {
+                    limit: limit,
+                    offset: offset,
+                    returned: stories.length,
+                    has_more: hasMore,
+                    next_offset: hasMore ? offset + limit : null
+                }
+            }
+        };
+    },
+
+    /**
+     * Returns the summary representation of an rm_story record.
+     *
+     * Keep this intentionally smaller than a future Get Story Details tool.
+     */
+    _serializeStory: function(story) {
+        return {
+            sys_id: story.getUniqueValue(),
+            number: story.getValue('number'),
+            short_description: story.getValue('short_description'),
+
+            state: this._valueAndDisplay(story, 'state'),
+            priority: this._valueAndDisplay(story, 'priority'),
+
+            points: this._number(story, 'points'),
+            blocked: this._boolean(story, 'blocked'),
+            active: this._boolean(story, 'active'),
+
+            assignment_group: this._reference(story, 'assignment_group'),
+            assigned_to: this._reference(story, 'assigned_to'),
+            sprint: this._reference(story, 'sprint'),
+            epic: this._reference(story, 'epic'),
+            product: this._reference(story, 'product'),
+            release: this._reference(story, 'release'),
+            project_phase: this._reference(story, 'project_phase'),
+
+            sys_updated_on: this._value(story, 'sys_updated_on')
+        };
+    },
+
+    _value: function(gr, fieldName) {
+        if (!gr.isValidField(fieldName)) {
+            return null;
+        }
+
+        var value = gr.getValue(fieldName);
+        return gs.nil(value) ? null : value;
+    },
+
+    _valueAndDisplay: function(gr, fieldName) {
+        if (!gr.isValidField(fieldName)) {
+            return null;
+        }
+
+        var value = gr.getValue(fieldName);
+
+        if (gs.nil(value)) {
+            return null;
+        }
+
+        return {
+            value: value,
+            display_value: gr.getDisplayValue(fieldName)
+        };
+    },
+
+    _reference: function(gr, fieldName) {
+        if (!gr.isValidField(fieldName)) {
+            return null;
+        }
+
+        var value = gr.getValue(fieldName);
+
+        if (gs.nil(value)) {
+            return null;
+        }
+
+        return {
+            value: value,
+            display_value: gr.getDisplayValue(fieldName)
+        };
+    },
+
+    _number: function(gr, fieldName) {
+        if (!gr.isValidField(fieldName)) {
+            return null;
+        }
+
+        var value = gr.getValue(fieldName);
+
+        if (gs.nil(value)) {
+            return null;
+        }
+
+        var parsed = parseFloat(value);
+        return isNaN(parsed) ? null : parsed;
+    },
+
+    _boolean: function(gr, fieldName) {
+        if (!gr.isValidField(fieldName)) {
+            return null;
+        }
+
+        var value = gr.getValue(fieldName);
+
+        if (gs.nil(value)) {
+            return null;
+        }
+
+        return value == 'true' || value == '1';
+    },
+
+    _parseInteger: function(value, defaultValue, min, max) {
+        if (gs.nil(value)) {
+            return defaultValue;
+        }
+
+        var parsed = parseInt(value, 10);
+
+        if (isNaN(parsed)) {
+            return defaultValue;
+        }
+
+        if (parsed < min) {
+            return min;
+        }
+
+        if (parsed > max) {
+            return max;
+        }
+
+        return parsed;
+    },
+
+    type: 'ProjectMCPStoryServiceSNC'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 16:14:02</sys_created_on>
+        <sys_id>506a2bc82bf3471035a8f22ffe91bf15</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>ProjectMCPStoryServiceSNC</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_script_include_506a2bc82bf3471035a8f22ffe91bf15</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 16:14:02</sys_updated_on>
+    </sys_script_include>
+</record_update>

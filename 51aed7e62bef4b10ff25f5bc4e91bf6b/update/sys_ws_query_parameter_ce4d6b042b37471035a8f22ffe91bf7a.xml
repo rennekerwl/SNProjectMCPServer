@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_query_parameter">
+    <sys_ws_query_parameter action="INSERT_OR_UPDATE">
+        <example_value>0</example_value>
+        <name>Offset</name>
+        <required>false</required>
+        <short_description>Zero-based starting position used to retrieve subsequent pages.</short_description>
+        <sys_class_name>sys_ws_query_parameter</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-03 16:24:47</sys_created_on>
+        <sys_id>ce4d6b042b37471035a8f22ffe91bf7a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Offset</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_ws_query_parameter_ce4d6b042b37471035a8f22ffe91bf7a</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-03 16:24:47</sys_updated_on>
+        <web_service_definition display_value="Project MCP Tool API">653884fa2baf0b1035a8f22ffe91bfdd</web_service_definition>
+    </sys_ws_query_parameter>
+</record_update>
