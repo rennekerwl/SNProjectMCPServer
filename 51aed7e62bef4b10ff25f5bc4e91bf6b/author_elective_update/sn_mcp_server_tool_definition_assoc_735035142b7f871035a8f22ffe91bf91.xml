@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sn_mcp_server_tool_definition_assoc">
+    <sn_mcp_server_tool_definition_assoc action="DELETE">
+        <enabled>true</enabled>
+        <mcp_server display_value="Project MCP Server">2351e36e2bef4b10ff25f5bc4e91bfaf</mcp_server>
+        <sys_class_name>sn_mcp_server_tool_definition_assoc</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 01:57:12</sys_created_on>
+        <sys_id>735035142b7f871035a8f22ffe91bf91</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Project MCP Server.Get Attachment</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_server_tool_definition_assoc_735035142b7f871035a8f22ffe91bf91</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 01:57:12</sys_updated_on>
+        <tool_definition display_value="Get Attachment">7f5035142b7f871035a8f22ffe91bf8a</tool_definition>
+        <visibility>model_app</visibility>
+    </sn_mcp_server_tool_definition_assoc>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</application>
+        <file_path/>
+        <instance_id>bede5a3feb1f2a909698ff72dad0cd5c</instance_id>
+        <instance_name>empwrenneker6</instance_name>
+        <name>sn_mcp_server_tool_definition_assoc_735035142b7f871035a8f22ffe91bf91</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sn_mcp_server_tool_definition_assoc"><sn_mcp_server_tool_definition_assoc action="INSERT_OR_UPDATE"><enabled>true</enabled><mcp_server display_value="Project MCP Server">2351e36e2bef4b10ff25f5bc4e91bfaf</mcp_server><sys_class_name>sn_mcp_server_tool_definition_assoc</sys_class_name><sys_created_by>MCPAdmin</sys_created_by><sys_created_on>2026-10-04 01:57:12</sys_created_on><sys_id>735035142b7f871035a8f22ffe91bf91</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Project MCP Server.Get Attachment</sys_name><sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package><sys_policy/><sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope><sys_update_name>sn_mcp_server_tool_definition_assoc_735035142b7f871035a8f22ffe91bf91</sys_update_name><sys_updated_by>MCPAdmin</sys_updated_by><sys_updated_on>2026-10-04 01:57:12</sys_updated_on><tool_definition display_value="Get Attachment">7f5035142b7f871035a8f22ffe91bf8a</tool_definition><visibility>model_app</visibility></sn_mcp_server_tool_definition_assoc></record_update>]]></payload>
+        <payload_hash>-318561552</payload_hash>
+        <record_name>Project MCP Server.Get Attachment</record_name>
+        <reverted_from/>
+        <source>3e4e2d1c2b3f871035a8f22ffe91bfce</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 01:57:13</sys_created_on>
+        <sys_id>0060b5542b7f871035a8f22ffe91bfe9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a104a129960000001</sys_recorded_at>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 01:57:13</sys_updated_on>
+        <type>MCP Server Tool Definition Association</type>
+        <update_guid>8c60b554917f87108d7ccbff4e89b0e7</update_guid>
+        <update_guid_history>8c60b554917f87108d7ccbff4e89b0e7:-318561552</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="Project MCP Server.Get Attachment">6ea68a582b73c71035a8f22ffe91bfbc</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:34:36</sys_created_on>
+        <sys_db_object display_value="" name="sn_mcp_server_tool_definition_assoc">sn_mcp_server_tool_definition_assoc</sys_db_object>
+        <sys_id>23b3720afec34eea877d65f9dfda7771</sys_id>
+        <sys_metadata>735035142b7f871035a8f22ffe91bf91</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Project MCP Server.Get Attachment</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_scope_delete display_value="">25bf726cab6444d68d711ad900beb829</sys_scope_delete>
+        <sys_update_name>sn_mcp_server_tool_definition_assoc_735035142b7f871035a8f22ffe91bf91</sys_update_name>
+        <sys_update_version display_value="sn_mcp_server_tool_definition_assoc_735035142b7f871035a8f22ffe91bf91">0060b5542b7f871035a8f22ffe91bfe9</sys_update_version>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:34:36</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
