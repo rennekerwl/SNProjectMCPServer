@@ -121,6 +121,182 @@ ProjectMCPAttachmentServiceSNC.prototype = {
         }
     },
 
+    addAttachment: function(
+        tableName,
+        tableSysId,
+        fileName,
+        contentBase64
+    ) {
+        try {
+            tableName = this._trim(tableName);
+            tableSysId = this._trim(tableSysId);
+            fileName = this._trim(fileName);
+
+            if (!tableName) {
+                return this._error(
+                    400,
+                    'table_name is required.'
+                );
+            }
+
+            if (!tableSysId) {
+                return this._error(
+                    400,
+                    'table_sys_id is required.'
+                );
+            }
+
+            if (!fileName) {
+                return this._error(
+                    400,
+                    'file_name is required.'
+                );
+            }
+
+            if (gs.nil(contentBase64)) {
+                return this._error(
+                    400,
+                    'content_base64 is required.'
+                );
+            }
+
+            if (!this._isAllowedTable(tableName)) {
+                return this._error(
+                    403,
+                    'Attachments may only be added to Story or Project records.'
+                );
+            }
+
+            if (!this._isValidSysId(tableSysId)) {
+                return this._error(
+                    400,
+                    'table_sys_id must be a valid 32-character sys_id.'
+                );
+            }
+
+            var normalizedBase64 =
+                String(contentBase64).replace(/\s/g, '');
+
+            if (!normalizedBase64) {
+                return this._error(
+                    400,
+                    'content_base64 is required.'
+                );
+            }
+
+            var decodedSize =
+                this._getDecodedBase64Size(normalizedBase64);
+
+            if (decodedSize < 0) {
+                return this._error(
+                    400,
+                    'content_base64 is not valid Base64 data.'
+                );
+            }
+
+            if (decodedSize > this.MAX_ATTACHMENT_SIZE_BYTES) {
+                return this._error(
+                    413,
+                    'Attachment exceeds the maximum allowed size of 5 MB.'
+                );
+            }
+
+            var targetGR = new GlideRecordSecure(tableName);
+
+            if (!targetGR.get(tableSysId)) {
+                return this._error(
+                    404,
+                    'Target record not found.'
+                );
+            }
+
+            if (!targetGR.canWrite()) {
+                return this._error(
+                    403,
+                    'Write access to the target record is required to add an attachment.'
+                );
+            }
+
+            var contentType =
+                this._getContentTypeFromFileName(fileName);
+
+            var attachmentAPI = new GlideSysAttachment();
+
+            var attachmentSysId = attachmentAPI.writeBase64(
+                targetGR,
+                fileName,
+                contentType,
+                normalizedBase64
+            );
+
+            if (gs.nil(attachmentSysId)) {
+                return this._error(
+                    500,
+                    'Unable to create attachment.'
+                );
+            }
+
+            /*
+             * Read the new attachment record back so the response
+             * contains the metadata stored by the platform.
+             */
+            var attachmentGR =
+                new GlideRecordSecure('sys_attachment');
+
+            if (attachmentGR.get(attachmentSysId)) {
+                var storedSize = parseInt(
+                    attachmentGR.getValue('size_bytes'),
+                    10
+                );
+
+                if (isNaN(storedSize)) {
+                    storedSize = decodedSize;
+                }
+
+                return {
+                    success: true,
+                    status: 201,
+                    data: {
+                        sys_id: attachmentGR.getUniqueValue(),
+                        file_name: attachmentGR.getValue('file_name'),
+                        content_type: attachmentGR.getValue('content_type'),
+                        size_bytes: storedSize,
+                        table_name: attachmentGR.getValue('table_name'),
+                        table_sys_id: attachmentGR.getValue('table_sys_id')
+                    }
+                };
+            }
+
+            /*
+             * The attachment was successfully created even if the
+             * new sys_attachment record cannot be read back.
+             */
+            return {
+                success: true,
+                status: 201,
+                data: {
+                    sys_id: String(attachmentSysId),
+                    file_name: fileName,
+                    content_type: contentType,
+                    size_bytes: decodedSize,
+                    table_name: tableName,
+                    table_sys_id: tableSysId
+                }
+            };
+
+        } catch (e) {
+            gs.error(
+                'ProjectMCPAttachmentServiceSNC.addAttachment error: ' +
+                e.message
+            );
+
+            return this._error(
+                500,
+                'Internal error adding attachment.'
+            );
+        }
+    },
+
     _findBySysId: function(attachmentSysId) {
         var gr = new GlideRecordSecure('sys_attachment');
 
@@ -209,6 +385,83 @@ ProjectMCPAttachmentServiceSNC.prototype = {
         return false;
     },
 
+    _isValidSysId: function(value) {
+        return /^[0-9a-fA-F]{32}$/.test(value);
+    },
+
+    _getDecodedBase64Size: function(contentBase64) {
+        if (!contentBase64) {
+            return -1;
+        }
+
+        if (contentBase64.length % 4 !== 0) {
+            return -1;
+        }
+
+        if (!/^[A-Za-z0-9+\/]*={0,2}$/.test(contentBase64)) {
+            return -1;
+        }
+
+        var padding = 0;
+
+        if (contentBase64.length >= 1 &&
+            contentBase64.charAt(contentBase64.length - 1) === '=') {
+            padding++;
+        }
+
+        if (contentBase64.length >= 2 &&
+            contentBase64.charAt(contentBase64.length - 2) === '=') {
+            padding++;
+        }
+
+        return (contentBase64.length * 3 / 4) - padding;
+    },
+
+    _getContentTypeFromFileName: function(fileName) {
+        var lowerName = String(fileName).toLowerCase();
+        var dotIndex = lowerName.lastIndexOf('.');
+
+        if (dotIndex < 0 || dotIndex === lowerName.length - 1) {
+            return 'application/octet-stream';
+        }
+
+        var extension = lowerName.substring(dotIndex + 1);
+
+        var contentTypes = {
+            'png': 'image/png',
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'gif': 'image/gif',
+            'webp': 'image/webp',
+            'bmp': 'image/bmp',
+            'svg': 'image/svg+xml',
+
+            'txt': 'text/plain',
+            'md': 'text/markdown',
+            'csv': 'text/csv',
+            'html': 'text/html',
+            'htm': 'text/html',
+            'css': 'text/css',
+
+            'json': 'application/json',
+            'xml': 'application/xml',
+            'js': 'application/javascript',
+
+            'pdf': 'application/pdf',
+            'zip': 'application/zip',
+
+            'doc': 'application/msword',
+            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls': 'application/vnd.ms-excel',
+            'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'ppt': 'application/vnd.ms-powerpoint',
+            'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        };
+
+        return contentTypes[extension] ||
+            'application/octet-stream';
+    },
+
     _trim: function(value) {
         if (gs.nil(value)) {
             return '';
@@ -231,13 +484,13 @@ ProjectMCPAttachmentServiceSNC.prototype = {
         <sys_created_by>MCPAdmin</sys_created_by>
         <sys_created_on>2026-10-04 01:49:00</sys_created_on>
         <sys_id>be4ead1c2b3f871035a8f22ffe91bfff</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>ProjectMCPAttachmentServiceSNC</sys_name>
         <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
         <sys_policy/>
         <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
         <sys_update_name>sys_script_include_be4ead1c2b3f871035a8f22ffe91bfff</sys_update_name>
         <sys_updated_by>MCPAdmin</sys_updated_by>
-        <sys_updated_on>2026-10-04 01:49:00</sys_updated_on>
+        <sys_updated_on>2026-10-04 16:14:34</sys_updated_on>
     </sys_script_include>
 </record_update>
