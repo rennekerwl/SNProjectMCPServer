@@ -15,164 +15,14 @@ ProjectMCPStoryServiceSNC.prototype = {
 
     initialize: function() {},
 
-
-    createStory: function(input) {
-        input = input || {};
-
-        if (!this._has(input, 'short_description')) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Missing required field: short_description'
-            };
-        }
-
-        var story = new GlideRecordSecure('rm_story');
-
-        if (!story.canCreate()) {
-            return {
-                success: false,
-                status: 403,
-                error: 'Not authorized to create stories'
-            };
-        }
-
-        story.initialize();
-
-        var result = this._setSimpleField(
-            story,
-            'short_description',
-            String(input.short_description).trim()
-        );
-
-        if (!result.success)
-            return result;
-
-        if (this._has(input, 'description')) {
-            result = this._setSimpleField(
-                story,
-                'description',
-                input.description
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'acceptance_criteria')) {
-            result = this._setSimpleField(
-                story,
-                'acceptance_criteria',
-                input.acceptance_criteria
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'priority')) {
-            result = this._setNonEmptyField(
-                story,
-                'priority',
-                input.priority
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'story_points')) {
-            result = this._setStoryPoints(
-                story,
-                input.story_points
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'project')) {
-            result = this._setReferenceField(
-                story,
-                'project',
-                input.project
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'sprint')) {
-            result = this._setReferenceField(
-                story,
-                'sprint',
-                input.sprint
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'assigned_to')) {
-            result = this._setReferenceField(
-                story,
-                'assigned_to',
-                input.assigned_to
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        if (this._has(input, 'assignment_group')) {
-            result = this._setReferenceField(
-                story,
-                'assignment_group',
-                input.assignment_group
-            );
-
-            if (!result.success)
-                return result;
-        }
-
-        var sysId = story.insert();
-
-        if (gs.nil(sysId)) {
-            return {
-                success: false,
-                status: 500,
-                error: 'Story creation failed'
-            };
-        }
-
-        var created = new GlideRecordSecure('rm_story');
-
-        if (!created.get(sysId)) {
-            return {
-                success: false,
-                status: 500,
-                error: 'Story was created but could not be reloaded'
-            };
-        }
-
-        return {
-            success: true,
-            status: 201,
-            data: this._serializeStoryDetails(created)
-        };
-    },
-
-
-    modifyStory: function(number, input) {
+    getByNumber: function(number) {
         if (gs.nil(number)) {
             return {
                 success: false,
                 status: 400,
-                error: 'Missing story number'
+                error: 'Missing required parameter: number'
             };
         }
-
-        input = input || {};
 
         var story = new GlideRecordSecure('rm_story');
         story.addQuery('number', number);
@@ -187,299 +37,65 @@ ProjectMCPStoryServiceSNC.prototype = {
             };
         }
 
-        if (!story.canWrite()) {
-            return {
-                success: false,
-                status: 403,
-                error: 'Not authorized to modify story ' + number
-            };
-        }
+        var data = {
+            sys_id: story.getUniqueValue(),
+            number: this._value(story, 'number'),
+            short_description: this._value(story, 'short_description'),
+            description: this._value(story, 'description'),
+            acceptance_criteria: this._value(story, 'acceptance_criteria'),
 
-        var updatedFields = [];
-        var result;
+            state: this._valueAndDisplay(story, 'state'),
+            priority: this._valueAndDisplay(story, 'priority'),
+            type: this._valueAndDisplay(story, 'type'),
+            classification: this._valueAndDisplay(story, 'classification'),
 
+            points: this._number(story, 'story_points'),
 
-        /*
-         * Normal fields:
-         * Empty/null values are treated as "no change."
-         */
+            blocked: this._boolean(story, 'blocked'),
+            active: this._boolean(story, 'active'),
 
-        if (this._has(input, 'short_description')) {
-            result = this._setSimpleField(
-                story,
-                'short_description',
-                String(input.short_description).trim()
-            );
+            project: this._reference(story, 'project'),
+            project_phase: this._reference(story, 'project_phase'),
+            assignment_group: this._reference(story, 'assignment_group'),
+            assigned_to: this._reference(story, 'assigned_to'),
+            sprint: this._reference(story, 'sprint'),
+            epic: this._reference(story, 'epic'),
+            product: this._reference(story, 'product'),
+            release: this._reference(story, 'release'),
+            theme: this._reference(story, 'theme'),
+            demand: this._reference(story, 'demand'),
 
-            if (!result.success)
-                return result;
+            sys_created_on: this._value(story, 'sys_created_on'),
+            sys_updated_on: this._value(story, 'sys_updated_on')
+        };
 
-            updatedFields.push('short_description');
-        }
+        data.activity = {
+            comments: this._journalEntries(story, 'comments'),
+            work_notes: this._journalEntries(story, 'work_notes')
+        };
 
-        if (this._has(input, 'description')) {
-            result = this._setSimpleField(
-                story,
-                'description',
-                input.description
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('description');
-        }
-
-        if (this._has(input, 'acceptance_criteria')) {
-            result = this._setSimpleField(
-                story,
-                'acceptance_criteria',
-                input.acceptance_criteria
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('acceptance_criteria');
-        }
-
-        if (this._has(input, 'state')) {
-            result = this._setNonEmptyField(
-                story,
-                'state',
-                input.state
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('state');
-        }
-
-        if (this._has(input, 'priority')) {
-            result = this._setNonEmptyField(
-                story,
-                'priority',
-                input.priority
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('priority');
-        }
-
-        if (this._has(input, 'story_points')) {
-            result = this._setStoryPoints(
-                story,
-                input.story_points
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('story_points');
-        }
-
-        if (this._has(input, 'blocked')) {
-            result = this._setBooleanField(
-                story,
-                'blocked',
-                input.blocked
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('blocked');
-        }
-
-        if (this._has(input, 'project')) {
-            result = this._setReferenceField(
-                story,
-                'project',
-                input.project
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('project');
-        }
-
-        if (this._has(input, 'sprint')) {
-            result = this._setReferenceField(
-                story,
-                'sprint',
-                input.sprint
-            );
-
-            if (!result.success)
-                return result;
-
-            updatedFields.push('sprint');
-        }
-
-
-        /*
-         * Clearable fields:
-         *
-         * Omitted       -> no change
-         * Non-empty     -> resolve/set reference
-         * Empty or null -> clear reference
-         *
-         * This mirrors Modify Incident.
-         */
-        var clearableFields = [
-            'assigned_to',
-            'assignment_group'
-        ];
-
-        for (var ci = 0; ci < clearableFields.length; ci++) {
-            var fieldName = clearableFields[ci];
-
-            if (Object.prototype.hasOwnProperty.call(input, fieldName)) {
-                var fieldValue = input[fieldName];
-
-                if (gs.nil(fieldValue) ||
-                    String(fieldValue).trim() === '') {
-
-                    if (!story.isValidField(fieldName)) {
-                        return {
-                            success: false,
-                            status: 400,
-                            error: 'Invalid story field: ' + fieldName
-                        };
-                    }
-
-                    if (!story.getElement(fieldName).canWrite()) {
-                        return {
-                            success: false,
-                            status: 403,
-                            error: 'Field is not writable: ' + fieldName
-                        };
-                    }
-
-                    story.setValue(fieldName, '');
-
-                } else {
-                    result = this._setReferenceField(
-                        story,
-                        fieldName,
-                        fieldValue
-                    );
-
-                    if (!result.success)
-                        return result;
-                }
-
-                updatedFields.push(fieldName);
-            }
-        }
-
-
-        /*
-         * Journal fields:
-         * Empty/null means no change.
-         */
-
-        if (this._has(input, 'work_notes')) {
-            if (!story.isValidField('work_notes') ||
-                !story.getElement('work_notes').canWrite()) {
-
-                return {
-                    success: false,
-                    status: 403,
-                    error: 'work_notes is not writable'
-                };
-            }
-
-            story.work_notes = String(input.work_notes);
-            updatedFields.push('work_notes');
-        }
-
-        if (this._has(input, 'comments')) {
-            if (!story.isValidField('comments') ||
-                !story.getElement('comments').canWrite()) {
-
-                return {
-                    success: false,
-                    status: 403,
-                    error: 'comments is not writable'
-                };
-            }
-
-            story.comments = String(input.comments);
-            updatedFields.push('comments');
-        }
-
-
-        if (updatedFields.length === 0) {
-            return {
-                success: false,
-                status: 400,
-                error: 'No supported fields were supplied'
-            };
-        }
-
-
-        var updatedSysId = story.update();
-
-        if (gs.nil(updatedSysId)) {
-            return {
-                success: false,
-                status: 409,
-                error: 'Story update was rejected'
-            };
-        }
-
-
-        var updatedStory = new GlideRecordSecure('rm_story');
-
-        if (!updatedStory.get(story.getUniqueValue())) {
-            return {
-                success: false,
-                status: 500,
-                error: 'Story was updated but could not be reloaded'
-            };
-        }
-
+        data.attachments = this._getAttachments(story.getUniqueValue());
 
         return {
             success: true,
             status: 200,
-            data: {
-                status: 'updated',
-                updated_fields: updatedFields,
-                story: this._serializeStoryDetails(updatedStory)
-            }
+            data: data
         };
     },
-
 
     listForProject: function(projectNumber, options) {
         if (gs.nil(projectNumber)) {
             return {
                 success: false,
                 status: 400,
-                error: 'Missing project number'
+                error: 'Missing required parameter: project number'
             };
         }
 
         options = options || {};
 
-        var limit = this._parseInteger(options.limit, 50);
-        var offset = this._parseInteger(options.offset, 0);
-
-        if (limit < 1)
-            limit = 50;
-
-        if (limit > 100)
-            limit = 100;
-
-        if (offset < 0)
-            offset = 0;
-
+        var limit = this._parseInteger(options.limit, 50, 1, 100);
+        var offset = this._parseInteger(options.offset, 0, 0, 100000);
 
         var project = new GlideRecordSecure('pm_project');
         project.addQuery('number', projectNumber);
@@ -494,20 +110,29 @@ ProjectMCPStoryServiceSNC.prototype = {
             };
         }
 
-
         var stories = [];
         var story = new GlideRecordSecure('rm_story');
 
         story.addQuery('project', project.getUniqueValue());
         story.orderBy('priority');
         story.orderBy('number');
-        story.chooseWindow(offset, offset + limit);
+
+        story.chooseWindow(offset, offset + limit + 1);
         story.query();
 
         while (story.next()) {
             stories.push(this._serializeStory(story));
+
+            if (stories.length > limit) {
+                break;
+            }
         }
 
+        var hasMore = stories.length > limit;
+
+        if (hasMore) {
+            stories.pop();
+        }
 
         return {
             success: true,
@@ -515,526 +140,192 @@ ProjectMCPStoryServiceSNC.prototype = {
             data: {
                 project: {
                     sys_id: project.getUniqueValue(),
-                    number: project.getValue('number'),
-                    name: project.getDisplayValue()
+                    number: this._value(project, 'number'),
+                    short_description: this._value(
+                        project,
+                        'short_description'
+                    )
                 },
-                offset: offset,
-                limit: limit,
-                count: stories.length,
-                stories: stories
+
+                stories: stories,
+
+                pagination: {
+                    limit: limit,
+                    offset: offset,
+                    returned: stories.length,
+                    has_more: hasMore,
+                    next_offset: hasMore ? offset + limit : null
+                }
             }
         };
     },
 
-
-    getByNumber: function(number) {
-        if (gs.nil(number)) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Missing story number'
-            };
-        }
-
-        var story = new GlideRecordSecure('rm_story');
-        story.addQuery('number', number);
-        story.setLimit(1);
-        story.query();
-
-        if (!story.next()) {
-            return {
-                success: false,
-                status: 404,
-                error: 'Story not found: ' + number
-            };
-        }
-
-        return {
-            success: true,
-            status: 200,
-            data: this._serializeStoryDetails(story)
-        };
-    },
-
-
     _serializeStory: function(story) {
         return {
             sys_id: story.getUniqueValue(),
+
             number: this._value(story, 'number'),
             short_description: this._value(
                 story,
                 'short_description'
             ),
 
-            state: this._valueAndDisplay(
-                story,
-                'state'
-            ),
+            state: this._valueAndDisplay(story, 'state'),
+            priority: this._valueAndDisplay(story, 'priority'),
 
-            priority: this._valueAndDisplay(
-                story,
-                'priority'
-            ),
+            points: this._number(story, 'story_points'),
 
-            points: this._number(
-                story,
-                'story_points'
-            ),
+            blocked: this._boolean(story, 'blocked'),
+            active: this._boolean(story, 'active'),
 
-            blocked: this._boolean(
-                story,
-                'blocked'
-            ),
-
-            active: this._boolean(
-                story,
-                'active'
-            ),
-
+            project: this._reference(story, 'project'),
             assignment_group: this._reference(
                 story,
                 'assignment_group'
             ),
+            assigned_to: this._reference(story, 'assigned_to'),
+            sprint: this._reference(story, 'sprint'),
 
-            assigned_to: this._reference(
-                story,
-                'assigned_to'
-            ),
-
-            sprint: this._reference(
-                story,
-                'sprint'
-            ),
-
-            epic: this._reference(
-                story,
-                'epic'
-            ),
-
-            product: this._reference(
-                story,
-                'product'
-            ),
-
-            release: this._reference(
-                story,
-                'release'
-            ),
-
-            project_phase: this._reference(
-                story,
-                'project_phase'
-            ),
-
-            sys_updated_on: this._value(
-                story,
-                'sys_updated_on'
-            )
+            sys_updated_on: this._value(story, 'sys_updated_on')
         };
     },
 
+    _getAttachments: function(storySysId) {
+        var attachments = [];
 
-    _serializeStoryDetails: function(story) {
-        var data = this._serializeStory(story);
+        var attachment = new GlideRecordSecure('sys_attachment');
+        attachment.addQuery('table_name', 'rm_story');
+        attachment.addQuery('table_sys_id', storySysId);
+        attachment.orderBy('sys_created_on');
+        attachment.query();
 
-        data.description =
-            this._value(story, 'description');
+        var maxSizeBytes = 5 * 1024 * 1024;
 
-        data.acceptance_criteria =
-            this._value(story, 'acceptance_criteria');
+        while (attachment.next()) {
+            var sizeBytes = parseInt(
+                attachment.getValue('size_bytes'),
+                10
+            );
 
-        data.project =
-            this._reference(story, 'project');
-
-        data.theme =
-            this._reference(story, 'theme');
-
-        data.demand =
-            this._reference(story, 'demand');
-
-        data.sys_created_on =
-            this._value(story, 'sys_created_on');
-
-        data.activity = {
-            comments: this._journalEntries(
-                story,
-                'comments'
-            ),
-
-            work_notes: this._journalEntries(
-                story,
-                'work_notes'
-            )
-        };
-
-        return data;
-    },
-
-
-    _setSimpleField: function(gr, fieldName, value) {
-        if (!gr.isValidField(fieldName)) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Invalid story field: ' + fieldName
-            };
-        }
-
-        if (!gr.getElement(fieldName).canWrite()) {
-            return {
-                success: false,
-                status: 403,
-                error: 'Field is not writable: ' + fieldName
-            };
-        }
-
-        gr.setValue(
-            fieldName,
-            String(value)
-        );
-
-        return {
-            success: true
-        };
-    },
-
-
-    _setNonEmptyField: function(gr, fieldName, value) {
-        if (gs.nil(value) ||
-            String(value).trim() === '') {
-
-            return {
-                success: false,
-                status: 400,
-                error: fieldName + ' cannot be empty'
-            };
-        }
-
-        return this._setSimpleField(
-            gr,
-            fieldName,
-            String(value).trim()
-        );
-    },
-
-
-    _setStoryPoints: function(gr, value) {
-        var points = parseFloat(value);
-
-        if (isNaN(points) || points < 0) {
-            return {
-                success: false,
-                status: 400,
-                error: 'story_points must be a non-negative number'
-            };
-        }
-
-        return this._setSimpleField(
-            gr,
-            'story_points',
-            points
-        );
-    },
-
-
-    _setBooleanField: function(gr, fieldName, value) {
-        var normalized;
-
-        if (value === true ||
-            value === 'true' ||
-            value === '1' ||
-            value === 1) {
-
-            normalized = true;
-
-        } else if (
-            value === false ||
-            value === 'false' ||
-            value === '0' ||
-            value === 0
-        ) {
-
-            normalized = false;
-
-        } else {
-
-            return {
-                success: false,
-                status: 400,
-                error: fieldName + ' must be true or false'
-            };
-        }
-
-        return this._setSimpleField(
-            gr,
-            fieldName,
-            normalized ? 'true' : 'false'
-        );
-    },
-
-
-    _setReferenceField: function(gr, fieldName, value) {
-        if (!gr.isValidField(fieldName)) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Invalid story field: ' + fieldName
-            };
-        }
-
-        var element = gr.getElement(fieldName);
-
-        if (!element.canWrite()) {
-            return {
-                success: false,
-                status: 403,
-                error: 'Field is not writable: ' + fieldName
-            };
-        }
-
-        var searchValue = String(value).trim();
-        var referenceTable = element.getReferenceTable();
-
-        if (gs.nil(referenceTable)) {
-            return {
-                success: false,
-                status: 400,
-                error: fieldName + ' is not a reference field'
-            };
-        }
-
-        var ref = new GlideRecordSecure(referenceTable);
-
-
-        /*
-         * First try the input as a sys_id.
-         */
-        if (/^[0-9a-f]{32}$/i.test(searchValue)) {
-            if (ref.get(searchValue)) {
-                gr.setValue(
-                    fieldName,
-                    ref.getUniqueValue()
-                );
-
-                return {
-                    success: true
-                };
+            if (isNaN(sizeBytes)) {
+                sizeBytes = 0;
             }
 
-            return {
-                success: false,
-                status: 400,
-                error: 'No ' +
-                    referenceTable +
-                    ' record found with sys_id ' +
-                    searchValue
-            };
+            attachments.push({
+                sys_id: attachment.getUniqueValue(),
+                file_name: attachment.getValue('file_name'),
+                download_allowed: sizeBytes <= maxSizeBytes,
+                created_on: attachment.getValue('sys_created_on'),
+                created_by: attachment.getValue('sys_created_by')
+            });
         }
 
-
-        /*
-         * Otherwise resolve common human-readable identifiers.
-         */
-        var candidateFields = [
-            'number',
-            'user_name',
-            'name'
-        ];
-
-        var query = null;
-
-        for (var i = 0; i < candidateFields.length; i++) {
-            if (!ref.isValidField(candidateFields[i]))
-                continue;
-
-            if (query === null) {
-                query = ref.addQuery(
-                    candidateFields[i],
-                    searchValue
-                );
-            } else {
-                query.addOrCondition(
-                    candidateFields[i],
-                    searchValue
-                );
-            }
-        }
-
-
-        if (query === null) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Unable to resolve reference field: ' +
-                    fieldName
-            };
-        }
-
-
-        ref.setLimit(2);
-        ref.query();
-
-        if (!ref.next()) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Unable to resolve ' +
-                    fieldName +
-                    ': ' +
-                    searchValue
-            };
-        }
-
-
-        var resolvedSysId = ref.getUniqueValue();
-
-
-        /*
-         * Don't silently choose between duplicate names.
-         */
-        if (ref.next()) {
-            return {
-                success: false,
-                status: 400,
-                error: 'Ambiguous ' +
-                    fieldName +
-                    ': ' +
-                    searchValue +
-                    '. Supply the sys_id instead.'
-            };
-        }
-
-
-        gr.setValue(
-            fieldName,
-            resolvedSysId
-        );
-
-        return {
-            success: true
-        };
+        return attachments;
     },
-
 
     _value: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName))
+        if (!gr.isValidField(fieldName)) {
             return null;
+        }
 
-        return gr.getValue(fieldName);
+        var value = gr.getValue(fieldName);
+
+        return gs.nil(value) ? null : value;
     },
-
 
     _valueAndDisplay: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName))
+        if (!gr.isValidField(fieldName)) {
             return null;
+        }
+
+        var value = gr.getValue(fieldName);
+
+        if (gs.nil(value)) {
+            return null;
+        }
 
         return {
-            value: gr.getValue(fieldName),
-            display_value:
-                gr.getElement(fieldName).getDisplayValue()
+            value: value,
+            display_value: gr.getDisplayValue(fieldName)
         };
     },
-
 
     _reference: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName))
+        if (!gr.isValidField(fieldName)) {
             return null;
+        }
 
         var value = gr.getValue(fieldName);
 
-        if (gs.nil(value))
+        if (gs.nil(value)) {
             return null;
+        }
 
         return {
-            sys_id: value,
-            display_value:
-                gr.getElement(fieldName).getDisplayValue()
+            value: value,
+            display_value: gr.getDisplayValue(fieldName)
         };
     },
 
-
     _number: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName))
+        if (!gr.isValidField(fieldName)) {
             return null;
+        }
 
         var value = gr.getValue(fieldName);
 
-        if (gs.nil(value))
+        if (gs.nil(value)) {
             return null;
+        }
 
         var number = parseFloat(value);
 
         return isNaN(number) ? null : number;
     },
 
-
     _boolean: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName))
+        if (!gr.isValidField(fieldName)) {
             return null;
+        }
 
         var value = gr.getValue(fieldName);
 
-        return value === 'true' ||
-            value === '1';
-    },
+        if (gs.nil(value)) {
+            return null;
+        }
 
+        return value === 'true' || value === '1';
+    },
 
     _journalEntries: function(gr, fieldName) {
-        if (!gr.isValidField(fieldName))
-            return '';
+        if (!gr.isValidField(fieldName)) {
+            return null;
+        }
 
-        var element = gr.getElement(fieldName);
-
-        if (!element)
-            return '';
-
-        return element.getJournalEntry(-1) || '';
+        try {
+            return gr[fieldName].getJournalEntry(-1);
+        } catch (e) {
+            return null;
+        }
     },
 
-
-    /*
-     * For normal modification fields:
-     *
-     * Missing, null, undefined, or an empty string means
-     * "do not modify this field."
-     *
-     * false and 0 remain valid values.
-     */
-    _has: function(obj, property) {
-        if (!Object.prototype.hasOwnProperty.call(
-            obj,
-            property
-        )) {
-            return false;
-        }
-
-        var value = obj[property];
-
-        if (value === null ||
-            typeof value === 'undefined') {
-
-            return false;
-        }
-
-        if (typeof value === 'string' &&
-            value.trim() === '') {
-
-            return false;
-        }
-
-        return true;
-    },
-
-
-    _parseInteger: function(value, defaultValue) {
+    _parseInteger: function(value, defaultValue, min, max) {
         var parsed = parseInt(value, 10);
 
-        if (isNaN(parsed))
-            return defaultValue;
+        if (isNaN(parsed)) {
+            parsed = defaultValue;
+        }
+
+        if (parsed < min) {
+            parsed = min;
+        }
+
+        if (parsed > max) {
+            parsed = max;
+        }
 
         return parsed;
     },
-
 
     type: 'ProjectMCPStoryServiceSNC'
 };]]></script>
@@ -1042,13 +333,13 @@ ProjectMCPStoryServiceSNC.prototype = {
         <sys_created_by>MCPAdmin</sys_created_by>
         <sys_created_on>2026-10-03 16:14:02</sys_created_on>
         <sys_id>506a2bc82bf3471035a8f22ffe91bf15</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>ProjectMCPStoryServiceSNC</sys_name>
         <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
         <sys_policy/>
         <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
         <sys_update_name>sys_script_include_506a2bc82bf3471035a8f22ffe91bf15</sys_update_name>
         <sys_updated_by>MCPAdmin</sys_updated_by>
-        <sys_updated_on>2026-10-03 22:36:29</sys_updated_on>
+        <sys_updated_on>2026-10-04 14:54:27</sys_updated_on>
     </sys_script_include>
 </record_update>
