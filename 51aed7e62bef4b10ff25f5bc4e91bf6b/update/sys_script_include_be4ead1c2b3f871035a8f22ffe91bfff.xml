@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_snc_project_mc_0.ProjectMCPAttachmentServiceSNC</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>ProjectMCPAttachmentServiceSNC</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var ProjectMCPAttachmentServiceSNC = Class.create();
+ProjectMCPAttachmentServiceSNC.prototype = {
+    initialize: function() {
+        this.MAX_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
+
+        this.ALLOWED_TABLES = [
+            'rm_story',
+            'pm_project'
+        ];
+    },
+
+    getAttachment: function(attachmentSysId, attachmentName) {
+        try {
+            attachmentSysId = this._trim(attachmentSysId);
+            attachmentName = this._trim(attachmentName);
+
+            if (!attachmentSysId && !attachmentName) {
+                return this._error(
+                    400,
+                    'Either attachment_sys_id or attachment_name is required.'
+                );
+            }
+
+            if (attachmentSysId && attachmentName) {
+                return this._error(
+                    400,
+                    'Specify either attachment_sys_id or attachment_name, not both.'
+                );
+            }
+
+            var lookupResult;
+
+            if (attachmentSysId) {
+                lookupResult = this._findBySysId(attachmentSysId);
+            } else {
+                lookupResult = this._findByName(attachmentName);
+            }
+
+            if (!lookupResult.success) {
+                return lookupResult;
+            }
+
+            var attachmentGR = lookupResult.record;
+
+            var tableName = attachmentGR.getValue('table_name');
+
+            if (!this._isAllowedTable(tableName)) {
+                return this._error(
+                    403,
+                    'Attachments may only be retrieved from Story or Project records.'
+                );
+            }
+
+            var sizeBytes = parseInt(
+                attachmentGR.getValue('size_bytes'),
+                10
+            );
+
+            if (isNaN(sizeBytes)) {
+                return this._error(
+                    500,
+                    'Unable to determine attachment size.'
+                );
+            }
+
+            if (sizeBytes > this.MAX_ATTACHMENT_SIZE_BYTES) {
+                return this._error(
+                    413,
+                    'Attachment exceeds the maximum allowed size of 5 MB.'
+                );
+            }
+
+            var attachmentAPI = new GlideSysAttachment();
+
+            var contentBase64 =
+                attachmentAPI.getContentBase64(attachmentGR);
+
+            if (gs.nil(contentBase64)) {
+                return this._error(
+                    500,
+                    'Unable to read attachment content.'
+                );
+            }
+
+            return {
+                success: true,
+                status: 200,
+                data: {
+                    sys_id: attachmentGR.getUniqueValue(),
+                    file_name: attachmentGR.getValue('file_name'),
+                    content_type: attachmentGR.getValue('content_type'),
+                    size_bytes: sizeBytes,
+                    table_name: tableName,
+                    table_sys_id: attachmentGR.getValue('table_sys_id'),
+                    encoding: 'base64',
+                    content_base64: contentBase64
+                }
+            };
+
+        } catch (e) {
+            gs.error(
+                'ProjectMCPAttachmentServiceSNC.getAttachment error: ' +
+                e.message
+            );
+
+            return this._error(
+                500,
+                'Internal error retrieving attachment.'
+            );
+        }
+    },
+
+    _findBySysId: function(attachmentSysId) {
+        var gr = new GlideRecordSecure('sys_attachment');
+
+        if (!gr.get(attachmentSysId)) {
+            return this._error(
+                404,
+                'Attachment not found.'
+            );
+        }
+
+        /*
+         * Do the table check here as well so attachments from
+         * unrelated tables are rejected before any content is read.
+         */
+        if (!this._isAllowedTable(gr.getValue('table_name'))) {
+            return this._error(
+                403,
+                'Attachments may only be retrieved from Story or Project records.'
+            );
+        }
+
+        return {
+            success: true,
+            status: 200,
+            record: gr
+        };
+    },
+
+    _findByName: function(attachmentName) {
+        var gr = new GlideRecordSecure('sys_attachment');
+
+        gr.addQuery(
+            'table_name',
+            'IN',
+            this.ALLOWED_TABLES.join(',')
+        );
+
+        gr.addQuery('file_name', attachmentName);
+
+        /*
+         * We only need to know whether there is zero, one,
+         * or more than one matching attachment.
+         */
+        gr.setLimit(2);
+        gr.query();
+
+        if (!gr.next()) {
+            return this._error(
+                404,
+                'Attachment not found.'
+            );
+        }
+
+        var firstSysId = gr.getUniqueValue();
+
+        if (gr.next()) {
+            return this._error(
+                409,
+                'Multiple attachments with that filename exist. Use attachment_sys_id instead.'
+            );
+        }
+
+        var result = new GlideRecordSecure('sys_attachment');
+
+        if (!result.get(firstSysId)) {
+            return this._error(
+                404,
+                'Attachment not found.'
+            );
+        }
+
+        return {
+            success: true,
+            status: 200,
+            record: result
+        };
+    },
+
+    _isAllowedTable: function(tableName) {
+        for (var i = 0; i < this.ALLOWED_TABLES.length; i++) {
+            if (tableName === this.ALLOWED_TABLES[i]) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    _trim: function(value) {
+        if (gs.nil(value)) {
+            return '';
+        }
+
+        return String(value).replace(/^\s+|\s+$/g, '');
+    },
+
+    _error: function(status, message) {
+        return {
+            success: false,
+            status: status,
+            error: message
+        };
+    },
+
+    type: 'ProjectMCPAttachmentServiceSNC'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 01:49:00</sys_created_on>
+        <sys_id>be4ead1c2b3f871035a8f22ffe91bfff</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>ProjectMCPAttachmentServiceSNC</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_script_include_be4ead1c2b3f871035a8f22ffe91bfff</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 01:49:00</sys_updated_on>
+    </sys_script_include>
+</record_update>

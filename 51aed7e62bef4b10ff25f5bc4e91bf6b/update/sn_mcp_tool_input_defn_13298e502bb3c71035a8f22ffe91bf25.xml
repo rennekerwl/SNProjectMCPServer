@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_mcp_tool_input_defn">
+    <sn_mcp_tool_input_defn action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category>query_param</category>
+        <default_value/>
+        <description>The name of an attachment record</description>
+        <fully_qualified_input_name/>
+        <name>attachment_name</name>
+        <query_field/>
+        <query_table/>
+        <required>false</required>
+        <static_value>false</static_value>
+        <sys_class_name>sn_mcp_tool_input_defn</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:45:34</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>13298e502bb3c71035a8f22ffe91bf25</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>attachment_name</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_tool_input_defn_13298e502bb3c71035a8f22ffe91bf25</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:45:34</sys_updated_on>
+        <tool_definition display_value="Get Attachment">8729c6502bb3c71035a8f22ffe91bf01</tool_definition>
+        <type>string</type>
+        <value/>
+    </sn_mcp_tool_input_defn>
+</record_update>

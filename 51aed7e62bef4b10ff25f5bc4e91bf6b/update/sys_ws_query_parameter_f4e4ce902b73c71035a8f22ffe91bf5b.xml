@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_query_parameter">
+    <sys_ws_query_parameter action="INSERT_OR_UPDATE">
+        <example_value>31ad195c2b7b871035a8f22ffe91bf28</example_value>
+        <name>attachment_sys_id</name>
+        <required>false</required>
+        <short_description>The Sys ID of an attachment record</short_description>
+        <sys_class_name>sys_ws_query_parameter</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:27:46</sys_created_on>
+        <sys_id>f4e4ce902b73c71035a8f22ffe91bf5b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>attachment_sys_id</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_ws_query_parameter_f4e4ce902b73c71035a8f22ffe91bf5b</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:43:20</sys_updated_on>
+        <web_service_definition display_value="Project MCP Tool API">653884fa2baf0b1035a8f22ffe91bfdd</web_service_definition>
+    </sys_ws_query_parameter>
+</record_update>

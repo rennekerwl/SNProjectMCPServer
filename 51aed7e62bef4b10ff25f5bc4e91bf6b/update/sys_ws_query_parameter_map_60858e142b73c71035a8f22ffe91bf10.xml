@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_query_parameter_map">
+    <sys_ws_query_parameter_map action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_ws_query_parameter_map</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:29:38</sys_created_on>
+        <sys_id>60858e142b73c71035a8f22ffe91bf10</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>f4e4ce902b73c71035a8f22ffe91bf5b</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sys_ws_query_parameter_map_60858e142b73c71035a8f22ffe91bf10</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:29:38</sys_updated_on>
+        <web_service_operation display_value="Get Attachment">127f69902b7f871035a8f22ffe91bfcb</web_service_operation>
+        <web_service_query_parameter display_value="attachment_sys_id">f4e4ce902b73c71035a8f22ffe91bf5b</web_service_query_parameter>
+    </sys_ws_query_parameter_map>
+</record_update>

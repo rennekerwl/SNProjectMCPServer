@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_mcp_tool_definition">
+    <sn_mcp_tool_definition action="DELETE">
+        <active>true</active>
+        <annotations/>
+        <description>This tool allows for you to get an attachment for a Story or Project record.</description>
+        <duplicated_from/>
+        <label>Get Attachment</label>
+        <mcp_app/>
+        <name>x_snc_project_mc_0.get_attachment</name>
+        <servers_associated/>
+        <source>custom</source>
+        <sys_class_name>sn_mcp_tool_definition</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 01:57:11</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>7f5035142b7f871035a8f22ffe91bf8a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Attachment</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_tool_definition_7f5035142b7f871035a8f22ffe91bf8a</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 01:57:11</sys_updated_on>
+        <tool_artifact_id>{"httpMethod":"GET","route":"/x_snc_project_mc_0/project_mcp_tool_api/attachment"}</tool_artifact_id>
+        <tool_category display_value="REST API">4a95b371ff363210e9f3ffffffffffbb</tool_category>
+    </sn_mcp_tool_definition>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</application>
+        <file_path/>
+        <instance_id>bede5a3feb1f2a909698ff72dad0cd5c</instance_id>
+        <instance_name>empwrenneker6</instance_name>
+        <name>sn_mcp_tool_definition_7f5035142b7f871035a8f22ffe91bf8a</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_mcp_tool_definition"><sn_mcp_tool_definition action="INSERT_OR_UPDATE"><active>true</active><annotations/><description>This tool allows for you to get an attachment for a Story or Project record.</description><duplicated_from/><label>Get Attachment</label><mcp_app/><name>x_snc_project_mc_0.get_attachment</name><servers_associated/><source>custom</source><sys_class_name>sn_mcp_tool_definition</sys_class_name><sys_created_by>MCPAdmin</sys_created_by><sys_created_on>2026-10-04 01:57:11</sys_created_on><sys_domain>global</sys_domain><sys_id>7f5035142b7f871035a8f22ffe91bf8a</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Get Attachment</sys_name><sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package><sys_policy/><sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope><sys_update_name>sn_mcp_tool_definition_7f5035142b7f871035a8f22ffe91bf8a</sys_update_name><sys_updated_by>MCPAdmin</sys_updated_by><sys_updated_on>2026-10-04 01:57:11</sys_updated_on><tool_artifact_id>{"httpMethod":"GET","route":"/x_snc_project_mc_0/project_mcp_tool_api/attachment"}</tool_artifact_id><tool_category display_value="REST API">4a95b371ff363210e9f3ffffffffffbb</tool_category></sn_mcp_tool_definition></record_update>]]></payload>
+        <payload_hash>1583691492</payload_hash>
+        <record_name>Get Attachment</record_name>
+        <reverted_from/>
+        <source>3e4e2d1c2b3f871035a8f22ffe91bfce</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 01:57:12</sys_created_on>
+        <sys_id>775035142b7f871035a8f22ffe91bf90</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a104a125110000001</sys_recorded_at>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 01:57:12</sys_updated_on>
+        <type>MCP Tool Definition</type>
+        <update_guid>375035145b7f8710ff73106a33107f8f</update_guid>
+        <update_guid_history>375035145b7f8710ff73106a33107f8f:1583691492</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="Get Attachment">77a6ca582b73c71035a8f22ffe91bf56</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:34:41</sys_created_on>
+        <sys_db_object display_value="" name="sn_mcp_tool_definition">sn_mcp_tool_definition</sys_db_object>
+        <sys_id>6bffcdccf4aa400c836d69656c400341</sys_id>
+        <sys_metadata>7f5035142b7f871035a8f22ffe91bf8a</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Attachment</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_scope_delete display_value="">25bf726cab6444d68d711ad900beb829</sys_scope_delete>
+        <sys_update_name>sn_mcp_tool_definition_7f5035142b7f871035a8f22ffe91bf8a</sys_update_name>
+        <sys_update_version display_value="sn_mcp_tool_definition_7f5035142b7f871035a8f22ffe91bf8a">775035142b7f871035a8f22ffe91bf90</sys_update_version>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:34:41</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

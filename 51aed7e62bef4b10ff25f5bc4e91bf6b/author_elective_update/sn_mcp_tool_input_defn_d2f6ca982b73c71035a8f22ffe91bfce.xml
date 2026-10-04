@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_mcp_tool_input_defn">
+    <sn_mcp_tool_input_defn action="DELETE">
+        <active>true</active>
+        <category>query_param</category>
+        <default_value/>
+        <description>The name of an attachment record</description>
+        <fully_qualified_input_name/>
+        <name>Attachment Name</name>
+        <query_field/>
+        <query_table/>
+        <required>false</required>
+        <static_value>false</static_value>
+        <sys_class_name>sn_mcp_tool_input_defn</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:35:56</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>d2f6ca982b73c71035a8f22ffe91bfce</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Attachment Name</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_update_name>sn_mcp_tool_input_defn_d2f6ca982b73c71035a8f22ffe91bfce</sys_update_name>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:35:56</sys_updated_on>
+        <tool_definition display_value="Get Attachment">8ef6ce582b73c71035a8f22ffe91bf38</tool_definition>
+        <type>string</type>
+        <value/>
+    </sn_mcp_tool_input_defn>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</application>
+        <file_path/>
+        <instance_id>bede5a3feb1f2a909698ff72dad0cd5c</instance_id>
+        <instance_name>empwrenneker6</instance_name>
+        <name>sn_mcp_tool_input_defn_d2f6ca982b73c71035a8f22ffe91bfce</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_mcp_tool_input_defn"><sn_mcp_tool_input_defn action="INSERT_OR_UPDATE"><active>true</active><category>query_param</category><default_value/><description>The name of an attachment record</description><fully_qualified_input_name/><name>Attachment Name</name><query_field/><query_table/><required>false</required><static_value>false</static_value><sys_class_name>sn_mcp_tool_input_defn</sys_class_name><sys_created_by>MCPAdmin</sys_created_by><sys_created_on>2026-10-04 03:35:56</sys_created_on><sys_domain>global</sys_domain><sys_id>d2f6ca982b73c71035a8f22ffe91bfce</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Attachment Name</sys_name><sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package><sys_policy/><sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope><sys_update_name>sn_mcp_tool_input_defn_d2f6ca982b73c71035a8f22ffe91bfce</sys_update_name><sys_updated_by>MCPAdmin</sys_updated_by><sys_updated_on>2026-10-04 03:35:56</sys_updated_on><tool_definition display_value="Get Attachment">8ef6ce582b73c71035a8f22ffe91bf38</tool_definition><type>string</type><value/></sn_mcp_tool_input_defn></record_update>]]></payload>
+        <payload_hash>-1712145587</payload_hash>
+        <record_name>Attachment Name</record_name>
+        <reverted_from/>
+        <source>3e4e2d1c2b3f871035a8f22ffe91bfce</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:35:57</sys_created_on>
+        <sys_id>aaf60e982b73c71035a8f22ffe91bf80</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a104fb8eb00000001</sys_recorded_at>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:35:57</sys_updated_on>
+        <type>MCP Tool Input</type>
+        <update_guid>2af60e98ad73c7109782da80c4659f7f</update_guid>
+        <update_guid_history>2af60e98ad73c7109782da80c4659f7f:-1712145587</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="Attachment Name">97e8ce102bb3c71035a8f22ffe91bff1</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>MCPAdmin</sys_created_by>
+        <sys_created_on>2026-10-04 03:44:28</sys_created_on>
+        <sys_db_object display_value="" name="sn_mcp_tool_input_defn">sn_mcp_tool_input_defn</sys_db_object>
+        <sys_id>408fd532577a4ff89cc65f9e306dce90</sys_id>
+        <sys_metadata>d2f6ca982b73c71035a8f22ffe91bfce</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Attachment Name</sys_name>
+        <sys_package display_value="Project MCP Server" source="x_snc_project_mc_0">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Project MCP Server">51aed7e62bef4b10ff25f5bc4e91bf6b</sys_scope>
+        <sys_scope_delete display_value="">25bf726cab6444d68d711ad900beb829</sys_scope_delete>
+        <sys_update_name>sn_mcp_tool_input_defn_d2f6ca982b73c71035a8f22ffe91bfce</sys_update_name>
+        <sys_update_version display_value="sn_mcp_tool_input_defn_d2f6ca982b73c71035a8f22ffe91bfce">aaf60e982b73c71035a8f22ffe91bf80</sys_update_version>
+        <sys_updated_by>MCPAdmin</sys_updated_by>
+        <sys_updated_on>2026-10-04 03:44:28</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
